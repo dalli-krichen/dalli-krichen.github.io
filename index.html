@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mohamed Ali Krichen</title>
+<link rel="icon" type="image/png" href="icon.png">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=IBM+Plex+Sans:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -85,8 +86,10 @@ footer{position:relative;z-index:1;background:rgba(11,13,18,.65);border-top:1px 
 .s-arr:nth-child(1){animation-delay:0s;}.s-arr:nth-child(2){animation-delay:.18s;}.s-arr:nth-child(3){animation-delay:.36s;}
 @keyframes arrowBounce{0%{opacity:0;transform:rotate(45deg) translate(-4px,-4px);}50%{opacity:1;}100%{opacity:0;transform:rotate(45deg) translate(4px,4px);}}
 
-.proj-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:12px;}
-.pcard{background:var(--card);border:1px solid var(--border);border-radius:8px;display:flex;flex-direction:column;text-decoration:none;color:inherit;cursor:none;transition:border-color .15s,box-shadow .15s,transform .2s;}
+.proj-carousel-row{display:flex;align-items:center;gap:14px;}
+.proj-carousel-outer{flex:1;overflow:hidden;}
+.proj-carousel-track{display:flex;gap:12px;transition:transform .4s cubic-bezier(.4,0,.2,1);}
+.pcard{background:var(--card);border:1px solid var(--border);border-radius:8px;display:flex;flex-direction:column;text-decoration:none;color:inherit;cursor:none;transition:border-color .15s,box-shadow .15s,transform .2s;width:310px;flex-shrink:0;}
 .pcard:hover{border-color:var(--bord2);box-shadow:0 0 0 1px var(--bord2);transform:translateY(-2px);}
 .pcard.locked{opacity:.42;filter:grayscale(.3);pointer-events:none;}
 .pcard-top{padding:14px 16px 0;display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
@@ -334,34 +337,68 @@ footer{position:relative;z-index:1;background:rgba(11,13,18,.65);border-top:1px 
 <section id="projects">
   <div class="wrap">
     <div class="sec-hdr"><h2>Projects</h2></div>
-    <div class="proj-grid">
+    <div class="proj-carousel-row">
+      <button class="carr" id="pprev" onclick="movP(-1)" disabled>&#8592;</button>
+      <div class="proj-carousel-outer">
+        <div class="proj-carousel-track" id="ptrack">
+
+          <!-- ═══ ADD NEW PROJECT CARDS HERE — copy any block below ═══ -->
+
           <a href="https://github.com/dalli-krichen/TryHackMe---Love-at-First-Breach-2026" target="_blank" rel="noopener" class="pcard">
-        <div class="pcard-top"><span class="ptype">CTF &middot; Write-up</span></div>
-        <div class="pbody">
-          <div class="ptitle">THM Love at First Breach 2026</div>
-          <div class="pdesc">TryHackMe Valentine&#39;s CTF &mdash; full walkthrough covering enumeration, exploitation, and post-exploitation chain.</div>
-          <div class="ptags"><span class="tag">TryHackMe</span><span class="tag">Pentest</span><span class="tag">CTF</span></div>
+            <div class="pcard-top"><span class="ptype">CTF &middot; Write-up</span></div>
+            <div class="pbody">
+              <div class="ptitle">THM Love at First Breach 2026</div>
+              <div class="pdesc">TryHackMe Valentine&#39;s CTF &mdash; full walkthrough covering enumeration, exploitation, and post-exploitation chain.</div>
+              <div class="ptags"><span class="tag">TryHackMe</span><span class="tag">Pentest</span><span class="tag">CTF</span></div>
+            </div>
+            <div class="pfooter"><span>View on GitHub</span><span class="arr">&#8594;</span></div>
+          </a>
+
+          <a href="Cyber_Security_Tools_Cheatsheet.html" target="_blank" rel="noopener" class="pcard">
+            <div class="pcard-top"><span class="ptype">Reference Doc</span></div>
+            <div class="pbody">
+              <div class="ptitle">Cybersecurity Tools Cheatsheet</div>
+              <div class="pdesc">Comprehensive reference covering offensive and defensive tooling — Nmap, Wireshark, Metasploit, Burp Suite and more.</div>
+              <div class="ptags"><span class="tag">OSINT</span><span class="tag">Exploitation</span><span class="tag">Forensics</span><span class="tag">Recon</span></div>
+            </div>
+            <div class="pfooter"><span>Open cheatsheet</span><span class="arr">&#8594;</span></div>
+          </a>
+
+          <div class="pcard locked">
+            <div class="pcard-top"><span class="ptype">Lab &middot; Research</span><span class="lock-badge">Coming Soon</span></div>
+            <div class="pbody">
+              <div class="ptitle">Azure Honeypot Lab</div>
+              <div class="pdesc">Intentionally exposed Azure VM to observe real-world attack patterns. Sentinel SIEM and global threat mapping.</div>
+              <div class="ptags"><span class="tag">Azure</span><span class="tag">Sentinel</span><span class="tag">Honeypot</span></div>
+            </div>
+            <div class="pfooter"><span>Locked</span></div>
+          </div>
+
+          <div class="pcard locked">
+            <div class="pcard-top"><span class="ptype">ML &middot; Research</span><span class="lock-badge">Coming Soon</span></div>
+            <div class="pbody">
+              <div class="ptitle">Phishing Detection using AI</div>
+              <div class="pdesc">Machine learning pipeline trained on URL patterns, email headers, and NLP features to classify phishing attempts in real time with high accuracy.</div>
+              <div class="ptags"><span class="tag tag-v">Python</span><span class="tag tag-v">ML</span><span class="tag tag-p">NLP</span><span class="tag tag-g">Detection</span></div>
+            </div>
+            <div class="pfooter"><span>Locked</span></div>
+          </div>
+
+          <a href="https://github.com/dalli-krichen/Project-Open-Source-Security-Stack/blob/main/Open-Source-Security-Stack.pdf" target="_blank" rel="noopener" class="pcard">
+            <div class="pcard-top"><span class="ptype">Lab &middot; Internship</span></div>
+            <div class="pbody">
+              <div class="ptitle">Open Source Security Stack</div>
+              <div class="pdesc">Deployment of enterprise-grade open source tools — pfSense for firewall &amp; routing, Snort for IDS/IPS, Zabbix for monitoring, and FreeIPA for identity &amp; access management.</div>
+              <div class="ptags"><span class="tag tag-g">pfSense</span><span class="tag tag-g">Snort</span><span class="tag tag-g">Zabbix</span><span class="tag tag-g">FreeIPA</span></div>
+            </div>
+            <div class="pfooter"><span>View project</span><span class="arr">&#8594;</span></div>
+          </a>
+
+          <!-- ═══ END OF CARDS ═══ -->
+
         </div>
-        <div class="pfooter"><span>View on GitHub</span><span class="arr">&#8594;</span></div>
-      </a>
-      <a href="Cyber_Security_Tools_Cheatsheet.html" target="_blank" rel="noopener" class="pcard">
-        <div class="pcard-top"><span class="ptype">Reference Doc</span></div>
-        <div class="pbody">
-          <div class="ptitle">Cybersecurity Tools Cheatsheet</div>
-          <div class="pdesc">Comprehensive reference covering offensive and defensive tooling — Nmap, Wireshark, Metasploit, Burp Suite and more.</div>
-          <div class="ptags"><span class="tag">OSINT</span><span class="tag">Exploitation</span><span class="tag">Forensics</span><span class="tag">Recon</span></div>
-        </div>
-        <div class="pfooter"><span>Open cheatsheet</span><span class="arr">&#8594;</span></div>
-      </a>
-      <div class="pcard locked">
-        <div class="pcard-top"><span class="ptype">Lab &middot; Research</span><span class="lock-badge">Coming Soon</span></div>
-        <div class="pbody">
-          <div class="ptitle">Azure Honeypot Lab</div>
-          <div class="pdesc">Intentionally exposed Azure VM to observe real-world attack patterns. Sentinel SIEM and global threat mapping.</div>
-          <div class="ptags"><span class="tag">Azure</span><span class="tag">Sentinel</span><span class="tag">Honeypot</span></div>
-        </div>
-        <div class="pfooter"><span>Locked</span></div>
       </div>
+      <button class="carr" id="pnext" onclick="movP(1)">&#8594;</button>
     </div>
   </div>
 </section>
@@ -429,13 +466,19 @@ footer{position:relative;z-index:1;background:rgba(11,13,18,.65);border-top:1px 
       <button class="carr" id="cprev" onclick="movC(-1)" disabled>&#8592;</button>
       <div class="certs-outer">
         <div class="certs-track" id="ctrack">
+
+          <!-- ═══ ADD NEW CERT CARDS HERE — copy any .ccard block below ═══ -->
+
           <div class="ccard"><img class="cimg" src="https://www.comptia.org/_next/image/?url=https%3A%2F%2Fimages.cmp.optimizely.com%2F8623b0fab71111efac96d615e91762a5&w=256&q=90" alt="Sec+" onerror="this.style.display='none'"><div class="cname">Security+</div><div class="ciss">CompTIA &middot; SY0-701</div></div>
           <div class="ccard"><img class="cimg" src="https://images.credly.com/size/340x340/images/2030e43f-8003-4d4b-9630-847add403c87/image.png" alt="ISC2 CC" onerror="this.style.display='none'"><div class="cname">Certified in Cybersecurity</div><div class="ciss">ISC2 &middot; CC</div></div>
           <div class="ccard"><img class="cimg" src="https://learn.microsoft.com/en-us/media/learn/certification/badges/microsoft-certified-fundamentals-badge.svg" alt="SC-900" onerror="this.style.display='none'"><div class="cname">Security Fundamentals</div><div class="ciss">Microsoft &middot; SC-900</div></div>
           <div class="ccard"><img class="cimg" src="https://learn.microsoft.com/en-us/media/learn/certification/badges/microsoft-certified-fundamentals-badge.svg" alt="AZ-900" onerror="this.style.display='none'"><div class="cname">Azure Fundamentals</div><div class="ciss">Microsoft &middot; AZ-900</div></div>
           <div class="ccard"><img class="cimg" src="https://images.credly.com/size/340x340/images/00634f82-b07f-4bbd-a6bb-53de397fc3a6/image.png" alt="AWS" onerror="this.style.display='none'"><div class="cname">Cloud Practitioner</div><div class="ciss">AWS &middot; CLF-C02</div></div>
           <div class="ccard"><img class="cimg" src="https://images.credly.com/size/340x340/images/20082fc1-94af-4773-9df0-28856b566748/image.png" alt="Fortinet NSE3" onerror="this.style.display='none'"><div class="cname">FCA Cybersecurity</div><div class="ciss">Fortinet &middot; NSE3</div></div>
-          <div class="ccard"><img class="cimg" src="https://images.credly.com/size/340x340/images/42182330-246a-49d3-a937-c10b40c582fd/image.png" alt="HPE Aruba Central" onerror="this.style.display='none'"><div class="cname">Aruba Product Specialist: Central</div><div class="ciss">HPE Aruba</div></div>
+          <div class="ccard"><img class="cimg" src="https://images.credly.com/size/340x340/images/42182330-246a-49d3-a937-c10b40c582fd/image.png" alt="HPE Aruba Central" onerror="this.style.display='none'"><div class="cname">Aruba Product Specialist</div><div class="ciss">HPE &middot; Central</div></div>
+
+          <!-- ═══ END OF CERTS ═══ -->
+
         </div>
       </div>
       <button class="carr" id="cnext" onclick="movC(1)">&#8594;</button>
@@ -795,23 +838,63 @@ if (document.readyState==='loading') { document.addEventListener('DOMContentLoad
 else { buildTimeline(); }
 window.addEventListener('resize', buildTimeline);
 
-var cOffset=0, cVisible=4, cTotal=7, CARD_W=172+12;
+var PROJ_CARD_W = 310 + 12;
+var pOffset = 0, pVisible = 1;
+function calcProjs() {
+  var outer = document.getElementById('ptrack').parentElement;
+  if (!outer) return;
+  var total = document.getElementById('ptrack').querySelectorAll('.pcard').length;
+  pVisible = Math.max(1, Math.floor(outer.offsetWidth / PROJ_CARD_W));
+  if (pOffset > Math.max(0, total - pVisible)) pOffset = Math.max(0, total - pVisible);
+  renderProjs();
+}
+function renderProjs() {
+  var total = document.getElementById('ptrack').querySelectorAll('.pcard').length;
+  var max = Math.max(0, total - pVisible);
+  document.getElementById('ptrack').style.transform = 'translateX(' + (-(pOffset * PROJ_CARD_W)) + 'px)';
+  document.getElementById('pprev').disabled = (pOffset === 0);
+  document.getElementById('pnext').disabled = (pOffset >= max);
+}
+window.movP = function(d) {
+  var total = document.getElementById('ptrack').querySelectorAll('.pcard').length;
+  var max = Math.max(0, total - pVisible);
+  pOffset = Math.max(0, Math.min(max, pOffset + d));
+  renderProjs();
+};
+
+var CERT_CARD_W = 172 + 12;
+var cOffset = 0, cVisible = 4;
 function calcCerts() {
   var outer = document.getElementById('ctrack').parentElement;
   if (!outer) return;
-  cVisible = Math.max(1, Math.floor(outer.offsetWidth / CARD_W));
-  if (cOffset > Math.max(0, cTotal-cVisible)) cOffset = Math.max(0, cTotal-cVisible);
+  var total = document.getElementById('ctrack').querySelectorAll('.ccard').length;
+  cVisible = Math.max(1, Math.floor(outer.offsetWidth / CERT_CARD_W));
+  if (cOffset > Math.max(0, total - cVisible)) cOffset = Math.max(0, total - cVisible);
   renderCerts();
 }
 function renderCerts() {
-  var max = Math.max(0, cTotal-cVisible);
-  document.getElementById('ctrack').style.transform = 'translateX('+( -(cOffset*CARD_W))+'px)';
-  document.getElementById('cprev').disabled = (cOffset===0);
-  document.getElementById('cnext').disabled = (cOffset>=max);
+  var total = document.getElementById('ctrack').querySelectorAll('.ccard').length;
+  var max = Math.max(0, total - cVisible);
+  document.getElementById('ctrack').style.transform = 'translateX(' + (-(cOffset * CERT_CARD_W)) + 'px)';
+  document.getElementById('cprev').disabled = (cOffset === 0);
+  document.getElementById('cnext').disabled = (cOffset >= max);
 }
-window.movC = function(d) { var max=Math.max(0,cTotal-cVisible); cOffset=Math.max(0,Math.min(max,cOffset+d)); renderCerts(); };
-if (document.readyState==='loading') { document.addEventListener('DOMContentLoaded',function(){calcCerts();window.addEventListener('resize',calcCerts);}); }
-else { calcCerts(); window.addEventListener('resize',calcCerts); }
+window.movC = function(d) {
+  var total = document.getElementById('ctrack').querySelectorAll('.ccard').length;
+  var max = Math.max(0, total - cVisible);
+  cOffset = Math.max(0, Math.min(max, cOffset + d));
+  renderCerts();
+};
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', function() {
+    calcProjs(); calcCerts();
+    window.addEventListener('resize', function() { calcProjs(); calcCerts(); });
+  });
+} else {
+  calcProjs(); calcCerts();
+  window.addEventListener('resize', function() { calcProjs(); calcCerts(); });
+}
 
 /* ── TERMINAL CV — detailed & authentic ── */
 var termBody = document.getElementById('term-body');
